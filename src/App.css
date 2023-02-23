@@ -1,39 +1,96 @@
-.App {
-  text-align: center;
+* {
+  margin    : 0;
+  padding   : 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:root {
+  --color-header       : #131921;
+  --color-border       : #3b4149;
+  --color-search       : #febd69;
+  --color-header-bottom: #232f3e;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-float infinite 3s ease-in-out;
-  }
+body {
+  font-family: 'Roboto', sans-serif;
 }
 
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+a {
+  text-decoration: none;
+  display        : inline-block;
 }
 
-.App-link {
-  color: rgb(112, 76, 182);
+.form-control:focus {
+  box-shadow  : none;
+  border-color: inherit;
 }
 
-@keyframes App-logo-float {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+.gap-10 {
+  gap: 10px;
 }
+
+.gap-15 {
+  gap: 15px;
+}
+
+.gap-30 {
+  gap: 30px;
+}
+
+/* Header Part */
+.header-top-strip {
+  background-color: var(--color-header);
+  border-bottom   : 1px solid var(--color-border);
+}
+
+.header-upper {
+  background-color: var(--color-header);
+}
+
+.header-upper .input-group .input-group-text {
+  background-color: var(--color-search);
+}
+
+.header-upper .header-upper-links img {
+  width : 35px;
+  height: 35px;
+}
+
+.header-bottom {
+  background-color: var(--color-header-bottom);
+}
+
+.header-bottom .menu-link a,
+.header-bottom .dropdown button {
+  color         : white;
+  font-size     : 14px;
+  line-height   : 18px;
+  font-weight   : 400;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.header-bottom .dropdown button:focus {
+  box-shadow: none;
+}
+
+.header-bottom .dropdown-menu {
+  background-color: var(--color-header-bottom);
+  width           : 100%;
+  transform       : translate3d(0px, 57px, 0px) !important;
+}
+
+.header-bottom .dropdown-item {
+  padding      : 20px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-bottom .dropdown-item:hover {
+  background-color: transparent;
+  color           : var(--color-search) !important;
+}
+
+
+
+/* Header Part End */
