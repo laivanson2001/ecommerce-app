@@ -91,6 +91,21 @@ a {
   color           : var(--color-search) !important;
 }
 
-
-
 /* Header Part End */
+
+/* Footer Part */
+footer {
+  background-color: var(--color-header-bottom);
+}
+
+footer:not(:first-child) {
+  border-top: 1px solid var(--color-border);
+}
+
+footer .input-group-text {
+  background-color: var(--color-header-bottom);
+  color           : white;
+  padding         : 8px 17px !important;
+}
+
+/* Footer Part End */
