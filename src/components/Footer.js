@@ -52,7 +52,7 @@ const Footer = () => {
                             <div className="footer-link d-flex flex-column">
                                 <Link className='text-white py-2 mb-1'>Chính sách bảo mật</Link>
                                 <Link className='text-white py-2 mb-1'>Vận chuyển</Link>
-                                <Link className='text-white py-2 mb-1'>Dịch vụ</Link>
+                                <Link className='text-white py-2 mb-1'>Điều khoản & dịch vụ</Link>
                                 <Link className='text-white py-2 mb-1'>Tin tức</Link>
                             </div>
                         </div>
