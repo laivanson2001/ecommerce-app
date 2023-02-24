@@ -9,7 +9,7 @@ const Header = () => {
                 <div className="container-xxl">
                     <div className="row">
                         <div className="col-6">
-                            <p className='text-white mb-0'>Miễn phí vận chuyển đơn hàng từ 200k</p>
+                            <p className='text-white mb-0'>Miễn phí vận chuyển đơn hàng từ 2.000.000đ</p>
                         </div>
                         <div className="col-6">
                             <p className='text-end text-white mb-0'>SĐT: <a className='text-white' href="tel:+84348232305">0348232305</a></p>

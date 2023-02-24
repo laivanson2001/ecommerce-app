@@ -10,6 +10,9 @@
   --color-search       : #febd69;
   --color-header-bottom: #232f3e;
   --color-text-title   : #bf4800;
+  --color-background   : #f5f5f7;
+  --color-border-sub   : #ededed;
+  --color-date         : #777777;
 }
 
 body {
@@ -49,6 +52,13 @@ a {
 .button:hover {
   background-color: var(--color-search);
   color           : #131921;
+}
+
+.section-heading {
+  font-size    : 26px;
+  line-height  : 32px;
+  font-weight  : 500;
+  margin-bottom: 30px;
 }
 
 /* Header Part */
@@ -199,16 +209,16 @@ footer .input-group-text {
   width: 48%;
 }
 
-/* home wrapper 2 */
+/* Home Wrapper 2 */
 .home-wrapper-2 {
-  background-color: var(--color-f5f5f7);
+  background-color: var(--color-background);
 }
 
-/* home wrapper 2 ends */
+/* Home Wrapper 2 End */
 
-/* categories section */
-
-.categories {
+/* Categories Section */
+.categories,
+.card-wrapper {
   background-color: white;
   box-shadow      : 0 0 10px #0000001a;
   padding         : 15px;
@@ -227,30 +237,28 @@ footer .input-group-text {
 .categories>div:nth-child(2),
 .categories>div:nth-child(3),
 .categories>div:nth-child(4) {
-  border-bottom: 1px solid var(--color-ededed);
+  border-bottom: 1px solid var(--color-border-sub);
 }
 
 .categories>div:nth-child(1),
 .categories>div:nth-child(2),
 .categories>div:nth-child(3) {
-  border-right: 1px solid var(--color-ededed);
+  border-right: 1px solid var(--color-border-sub);
 }
 
 .categories>div:nth-child(5),
 .categories>div:nth-child(6),
 .categories>div:nth-child(7) {
-  border-right: 1px solid var(--color-ededed);
+  border-right: 1px solid var(--color-border-sub);
 }
 
-/* categories section ends here */
-/* Home Page Ends */
+/* Categories Section End */
+/* Home Page End */
 
 /* BLog Part */
-
 .blog-card {
   background-color: white;
-
-  border-radius: 10px;
+  border-radius   : 10px;
 }
 
 .blog-card img {
@@ -262,30 +270,30 @@ footer .input-group-text {
   padding: 15px;
 }
 
-.blog-contentp.date {
+.blog-content p.date {
   font-size     : 13px;
   line-height   : 24px;
   text-transform: uppercase;
   letter-spacing: 0;
   font-weight   : 400;
-  color         : var(--color-777777);
+  color         : var(--color-date);
   padding       : 0;
 }
 
 .blog-content h5 {
   font-size: 18px;
-  color    : var(--color-131921);
+  color    : var(--color-header);
 }
 
 .blog-content p.desc {
   font-size  : 13px;
   line-height: 22px;
-  color      : var(--color-777777);
+  color      : var(--color-date);
 }
 
 .single-blog-card a {
   font-size    : 18px;
-  color        : var(--color-777777);
+  color        : var(--color-date);
   margin-bottom: 20px;
 }
 
@@ -296,14 +304,13 @@ footer .input-group-text {
 }
 
 .single-blog-card p {
-  color    : var(--color-777777);
+  color    : var(--color-date);
   font-size: 14px;
 }
 
 /*  Blog Part ends here */
 
 /* Product Card */
-
 .product-card {
   padding         : 15px;
   background-color: white;
@@ -353,7 +360,7 @@ footer .input-group-text {
 
 .product-card p.description {
   font-size   : 13px;
-  color       : var(--color-777777);
+  color       : var(--color-date);
   margin-right: 20px;
 }
 
@@ -436,7 +443,7 @@ footer .input-group-text {
   list-style-type: none;
   font-size      : 13px;
   line-height    : 30px;
-  color          : var(--color-777777);
+  color          : var(--color-date);
   cursor         : pointer;
 }
 
@@ -478,7 +485,7 @@ footer .input-group-text {
 }
 
 .random-products:first-child {
-  border-bottom: 1px solid var(--color-ededed);
+  border-bottom: 1px solid var(--color-border-sub);
 }
 
 .filter-sort-grid {
@@ -573,7 +580,7 @@ footer .input-group-text {
 .contact-inner-wrapper address,
 .contact-inner-wrapper a,
 .contact-inner-wrapper p {
-  color: var(--color-777777);
+  color: var(--color-date);
 }
 
 /* Contact Page ends */
@@ -633,18 +640,18 @@ footer .input-group-text {
 .auth-card h3 {
   font-size  : 19px;
   font-weight: 500;
-  color      : var(--color-777777);
+  color      : var(--color-date);
 }
 
 .auth-card p {
   font-size: 13px;
-  color    : var(--color-777777);
+  color    : var(--color-date);
 }
 
 .auth-card .form-control {
   height          : 50px;
   background-color: var(--color-f5f5f7);
-  color           : var(--color-777777);
+  color           : var(--color-date);
   font-size       : 14px;
   border-radius   : 10px;
   border-color    : transparent;
@@ -689,7 +696,7 @@ footer .input-group-text {
 
 .description-wrapper p {
   font-size: 14px;
-  color    : var(--color-777777);
+  color    : var(--color-date);
 }
 
 .review-inner-wrapper {
@@ -710,12 +717,12 @@ footer .input-group-text {
 .review-head p,
 .review-head a {
   font-size: 14px;
-  color    : var(--color-777777);
+  color    : var(--color-date);
 }
 
 .review-form h4 {
   font-size: 16px;
-  color    : var(--color-777777);
+  color    : var(--color-date);
 }
 
 .review-form {
@@ -728,7 +735,7 @@ footer .input-group-text {
 
 .review p {
   font-size: 14px;
-  color    : var(--color-777777);
+  color    : var(--color-date);
 }
 
 .main-product-image {
@@ -792,7 +799,7 @@ footer .input-group-text {
 
 .main-product-details a.review-btn,
 .t-review {
-  color    : var(--color-777777);
+  color    : var(--color-date);
   font-size: 13px;
 }
 
@@ -804,13 +811,13 @@ footer .input-group-text {
 
 .product-data {
   font-size    : 13px;
-  columns      : var(--color-777777);
+  columns      : var(--color-date);
   margin-bottom: 0px;
 }
 
 .main-product-details a {
   font-size: 14px;
-  color    : var(--color-777777);
+  color    : var(--color-date);
 }
 
 /* Main Product Page */
@@ -823,7 +830,7 @@ footer .input-group-text {
 
 .cart-header h4 {
   font-size: 13px;
-  color    : var(--color-777777);
+  color    : var(--color-date);
 }
 
 .cart-col-1 {
@@ -831,7 +838,7 @@ footer .input-group-text {
 }
 
 .cart-col-1 p {
-  color    : var(--color-777777);
+  color    : var(--color-date);
   font-size: 14px;
 }
 
@@ -863,7 +870,7 @@ footer .input-group-text {
 
 .total-price {
   font-size: 16px;
-  color    : var(--color-777777);
+  color    : var(--color-date);
 }
 
 /* Shipping page ends here */
