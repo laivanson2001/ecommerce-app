@@ -2,6 +2,7 @@ import React from 'react'
 import Marquee from 'react-fast-marquee'
 import { Link } from 'react-router-dom'
 import BlogCard from '../components/BlogCard'
+import ProductCart from '../components/ProductCart'
 
 const Home = () => {
     return (
@@ -179,6 +180,19 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+            <section className='home-wrapper-2 featured-wrapper py-5'>
+                <div className="container-xxl">
+                    <div className="row">
+                        <div className="col-12">
+                            <h3 className="section-heading">Sản phẩm nổi bật</h3>
+                        </div>
+                        <ProductCart />
+                        <ProductCart />
+                        <ProductCart />
+                        <ProductCart />
+                    </div>
+                </div>
+            </section>
             <section className='home-wrapper-2 marque-wrapper py-5'>
                 <div className="container-xxl">
                     <div className="row">
@@ -215,24 +229,17 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
             <section className='home-wrapper-2 blog-wrapper py-5'>
                 <div className="container-xxl">
                     <div className="row">
                         <div className="col-12">
                             <h3 className="section-heading">Tin tức mới</h3>
                         </div>
-                        <div className="col-3">
-                            <BlogCard />
-                        </div>
-                        <div className="col-3">
-                            <BlogCard />
-                        </div>
-                        <div className="col-3">
-                            <BlogCard />
-                        </div>
-                        <div className="col-3">
-                            <BlogCard />
-                        </div>
+                        <BlogCard />
+                        <BlogCard />
+                        <BlogCard />
+                        <BlogCard />
                     </div>
                 </div>
             </section>
