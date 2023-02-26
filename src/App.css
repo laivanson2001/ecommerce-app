@@ -62,6 +62,10 @@ a {
   margin-bottom: 30px;
 }
 
+.w-45 {
+  width: 45%;
+}
+
 /* Header Part */
 .header-top-strip {
   background-color: var(--color-header);
@@ -376,20 +380,23 @@ footer .input-group-text {
   right: 15px;
 }
 
-/* Product Card ends here */
+/* Product Card End*/
 
 /* Special Product */
-
 .special-product-card {
   padding         : 20px 10px;
   border-radius   : 10px;
   background-color: white;
 }
 
-/* Special Product ends here */
+.discount-till p,
+.discount-till span {
+  font-size: 14px;
+}
 
-/* famous card */
+/* Special Product End*/
 
+/* Famous Card */
 .famous-card .famous-content {
   top : 10%;
   left: 5%;
@@ -422,7 +429,7 @@ footer .input-group-text {
   color      : white;
 }
 
-/* famous card ends */
+/* Famous Card End */
 
 /* Our Store */
 .filter-card {

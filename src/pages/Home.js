@@ -3,6 +3,7 @@ import Marquee from 'react-fast-marquee'
 import { Link } from 'react-router-dom'
 import BlogCard from '../components/BlogCard'
 import ProductCart from '../components/ProductCart'
+import SpecialProduct from '../components/SpecialProduct'
 
 const Home = () => {
     return (
@@ -190,6 +191,101 @@ const Home = () => {
                         <ProductCart />
                         <ProductCart />
                         <ProductCart />
+                    </div>
+                </div>
+            </section>
+            <section className='home-wrapper-2 famous-wrapper py-5'>
+                <div className="container-xxl">
+                    <div className="row">
+                        <div className="col-3">
+                            <div className="famous-card position-relative">
+                                <img
+                                    src="images/famous-1.webp"
+                                    className="img-fluid"
+                                    alt="famous"
+                                />
+                                <div className="famous-content position-absolute">
+                                    <h5>Đồng hồ thông minh</h5>
+                                    <h6>Smart Watch Series 7</h6>
+                                    <p>9.500.000đ</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="famous-card position-relative">
+                                <img
+                                    src="images/famous-2.webp"
+                                    className="img-fluid"
+                                    alt="famous"
+                                />
+                                <div className="famous-content position-absolute">
+                                    <h5 className="text-dark">TV HD</h5>
+                                    <h6 className="text-dark">Smart Tivi QLED 4K</h6>
+                                    <p className="text-dark"> 14.000.000đ</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="famous-card position-relative">
+                                <img
+                                    src="images/famous-3.webp"
+                                    className="img-fluid"
+                                    alt="famous"
+                                />
+                                <div className="famous-content position-absolute">
+                                    <h5 className="text-dark">Điện thoại</h5>
+                                    <h6 className="text-dark">Iphone 13 Pro.</h6>
+                                    <p className="text-dark">
+                                        25.000.000đ
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="famous-card position-relative">
+                                <img
+                                    src="images/famous-4.webp"
+                                    className="img-fluid"
+                                    alt="famous"
+                                />
+                                <div className="famous-content position-absolute">
+                                    <h5 className="text-dark">Loa</h5>
+                                    <h6 className="text-dark">Loa Bluetooth Sony</h6>
+                                    <p className="text-dark">
+                                        16.700.000đ
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section className='home-wrapper-2 special-wrapper py-5'>
+                <div className="container-xxl">
+                    <div className="row">
+                        <div className="col-12">
+                            <h3 className="section-heading">Sản phẩm đặc biệt</h3>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <SpecialProduct />
+                        <SpecialProduct />
+                        <SpecialProduct />
+                    </div>
+                </div>
+            </section>
+            <section className='home-wrapper-2 featured-wrapper py-5'>
+                <div className="container-xxl">
+                    <div className="row">
+                        <div className="col-12">
+                            <h3 className="section-heading">Sản phẩm phổ biến</h3>
+                        </div>
+                        <div className="row">
+                            <ProductCart />
+                            <ProductCart />
+                            <ProductCart />
+                            <ProductCart />
+                        </div>
                     </div>
                 </div>
             </section>
