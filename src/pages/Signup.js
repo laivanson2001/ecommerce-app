@@ -3,6 +3,7 @@ import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
+import { Link } from "react-router-dom";
 const Signup = () => {
 	return (
 		<>
@@ -12,7 +13,7 @@ const Signup = () => {
 				<div className='row'>
 					<div className='col-12'>
 						<div className='auth-card'>
-							<h3 className='text-center mb-3'>Sign Up</h3>
+							<h3 className='text-center mb-3'>Đăng Ký</h3>
 							<form
 								action=''
 								className='d-flex flex-column gap-15'
@@ -20,7 +21,7 @@ const Signup = () => {
 								<CustomInput
 									type='text'
 									name='name'
-									placeholder='Name'
+									placeholder='Họ tên'
 								/>
 								<CustomInput
 									type='email'
@@ -30,18 +31,29 @@ const Signup = () => {
 								<CustomInput
 									type='tel'
 									name='mobile'
-									placeholder='Mobile Number'
+									placeholder='Số điện thoại'
 								/>
 								<CustomInput
 									type='password'
 									name='password'
-									placeholder='Password'
+									placeholder='Mật khẩu'
 								/>
 								<div>
 									<div className='mt-3 d-flex justify-content-center gap-15 align-items-center'>
 										<button className='button border-0'>
-											Sign Up
+											Đăng ký
 										</button>
+									</div>
+									<div className='d-flex justify-content-center mt-3'>
+										<p className='m-0'>
+											Bạn đã có tài khoản?{" "}
+											<Link
+												to='/login'
+												className='text-decoration-underline'
+											>
+												Đăng nhập
+											</Link>
+										</p>
 									</div>
 								</div>
 							</form>

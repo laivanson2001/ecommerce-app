@@ -50,7 +50,6 @@ const Login = () => {
                       >
                         Đăng ký
                       </Link></p>
-
                   </div>
                 </div>
               </form>
