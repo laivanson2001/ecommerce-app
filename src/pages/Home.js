@@ -2,7 +2,7 @@ import React from 'react'
 import Marquee from 'react-fast-marquee'
 import { Link } from 'react-router-dom'
 import BlogCard from '../components/BlogCard'
-import ProductCart from '../components/ProductCart'
+import ProductCart from '../components/ProductCard'
 import SpecialProduct from '../components/SpecialProduct'
 
 const Home = () => {
@@ -325,17 +325,26 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
             <section className='home-wrapper-2 blog-wrapper py-5'>
                 <div className="container-xxl">
                     <div className="row">
                         <div className="col-12">
                             <h3 className="section-heading">Tin tức mới</h3>
                         </div>
-                        <BlogCard />
-                        <BlogCard />
-                        <BlogCard />
-                        <BlogCard />
+                        <div className="row">
+                            <div className="col-3">
+                                <BlogCard />
+                            </div>
+                            <div className="col-3">
+                                <BlogCard />
+                            </div>
+                            <div className="col-3">
+                                <BlogCard />
+                            </div>
+                            <div className="col-3">
+                                <BlogCard />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
