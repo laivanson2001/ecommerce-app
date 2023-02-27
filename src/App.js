@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import OurStore from "./pages/OurStore";
 import ResetPassword from "./pages/ResetPassword";
 import Signup from "./pages/Signup";
+import SingleBlog from "./pages/SingleBlog";
 import Wishlist from "./pages/Wishlist";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
 						<Route path='contact' element={<Contact />} />
 						<Route path='product' element={<OurStore />} />
 						<Route path='blogs' element={<Blog />} />
+						<Route path='blog/:id' element={<SingleBlog />} />
 						<Route
 							path='compare-product'
 							element={<CompareProduct />}
