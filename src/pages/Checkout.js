@@ -5,10 +5,6 @@ import Container from "../components/Container";
 import watch from "../images/watch.jpg";
 
 const Checkout = () => {
-	const [selected, setSelected] = useState("");
-	const handleChange = (e) => {
-		setSelected(e.target.value);
-	};
 	return (
 		<>
 			<Container class1='checkout-wrapper py-5 home-wrapper-2'>
