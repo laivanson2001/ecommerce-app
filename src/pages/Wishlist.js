@@ -2,6 +2,7 @@ import React from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
+import watch from "../images/watch.jpg";
 
 const Wishlist = () => {
 	return (
@@ -19,7 +20,7 @@ const Wishlist = () => {
 							/>
 							<div className='wishlist-card-image'>
 								<img
-									src='images/watch.jpg'
+									src={watch}
 									className='img-fluid w-100'
 									alt='watch'
 								/>

@@ -692,16 +692,14 @@ footer .input-group-text {
 /* Auth Card End*/
 
 /* Policy Pages */
-
 .policy {
   background-color: white;
   padding         : 30px;
 }
 
-/* Policy Pages  ends */
+/* Policy Pages End */
 
 /* Main Product Page */
-
 .description-wrapper h4,
 .reviews-wrapper h3 {
   font-size    : 26px;
@@ -754,9 +752,10 @@ footer .input-group-text {
 }
 
 .main-product-image {
-  padding         : 20px;
-  background-color: white;
-  border-radius   : 10px;
+  padding                : 20px;
+  background-color       : white;
+  border-top-left-radius : 10px;
+  border-top-right-radius: 10px;
 }
 
 .main-product-image>div {
@@ -770,14 +769,15 @@ footer .input-group-text {
 }
 
 .other-product-images {
-  background-color: white;
-  padding         : 20px;
+  background-color          : white;
+  padding                   : 0 20px 20px;
+  border-bottom-left-radius : 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .other-product-images>div {
-  padding: 20px;
-  width  : 48%;
-  border : 1px solid rgba(0, 0, 0, 0.25);
+  width : 25%;
+  border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .main-product-image .js-image-zoom__zoomed-image {
@@ -830,12 +830,13 @@ footer .input-group-text {
   margin-bottom: 0px;
 }
 
-.main-product-details a {
+.main-product-details a,
+.main-product-details span {
   font-size: 14px;
   color    : var(--color-date);
 }
 
-/* Main Product Page */
+/* Main Product Page End */
 
 /* Cart Page */
 .cart-header,

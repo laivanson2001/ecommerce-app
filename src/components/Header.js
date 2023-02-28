@@ -1,6 +1,11 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
+import compare from "../images/compare.svg";
+import wishlist from "../images/wishlist.svg";
+import user from "../images/user.svg";
+import cart from "../images/cart.svg";
+import menu from "../images/menu.svg";
 
 const Header = () => {
 	return (
@@ -61,7 +66,7 @@ const Header = () => {
 										to='/compare-product'
 										className='d-flex align-items-center gap-10 text-white'
 									>
-										<img src='images/compare.svg' alt='' />
+										<img src={compare} alt='' />
 										<p className='mb-0'>So sánh</p>
 									</Link>
 								</div>
@@ -70,7 +75,7 @@ const Header = () => {
 										to='/wishlist'
 										className='d-flex align-items-center gap-10 text-white'
 									>
-										<img src='images/wishlist.svg' alt='' />
+										<img src={wishlist} alt='' />
 										<p className='mb-0'>Yêu thích</p>
 									</Link>
 								</div>
@@ -79,7 +84,7 @@ const Header = () => {
 										to='login'
 										className='d-flex align-items-center gap-10 text-white'
 									>
-										<img src='images/user.svg' alt='' />
+										<img src={user} alt='' />
 										<p className='mb-0'>Tài khoản</p>
 									</Link>
 								</div>
@@ -88,7 +93,7 @@ const Header = () => {
 										to='cart'
 										className='d-flex align-items-center gap-10 text-white'
 									>
-										<img src='images/cart.svg' alt='' />
+										<img src={cart} alt='' />
 										<div className='d-flex flex-column gap-10'>
 											<span className='badge bg-white text-dark'>
 												0
@@ -115,7 +120,7 @@ const Header = () => {
 											data-bs-toggle='dropdown'
 											aria-expanded='false'
 										>
-											<img src='images/menu.svg' alt='' />
+											<img src={menu} alt='' />
 											<span className='me-5 d-inline-block'>
 												Danh mục
 											</span>
