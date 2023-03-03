@@ -42,4 +42,64 @@ const loginUser = asyncHandler(async (req, res) => {
 	}
 });
 
-module.exports = { createUser, loginUser };
+const getAllUser = asyncHandler(async (req, res) => {
+	try {
+		const getUsers = await userModel.find();
+		res.json(getUsers);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+const getUserById = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	try {
+		const getUserById = await userModel.findById(id);
+		res.json({
+			getUserById,
+		});
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	try {
+		const deleteUser = await userModel.findByIdAndDelete(id);
+		res.json({
+			deleteUser,
+		});
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+const updatedUser = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	try {
+		const updatedUser = await userModel.findByIdAndUpdate(
+			_id,
+			{
+				name: req?.body?.name,
+				email: req?.body?.email,
+				mobile: req?.body?.mobile,
+			},
+			{
+				new: true,
+			}
+		);
+		res.json(updatedUser);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+module.exports = {
+	createUser,
+	loginUser,
+	getAllUser,
+	getUserById,
+	deleteUser,
+	updatedUser,
+};
