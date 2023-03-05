@@ -1,3 +1,4 @@
+const cookieParser = require("cookie-parser");
 const express = require("express");
 const dbConnect = require("./config/dbConnect");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
@@ -9,6 +10,7 @@ const port = process.env.PORT || 5000;
 dbConnect();
 app.get("/", (req, res) => res.send("Hello World!"));
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api/user", authRouter);
 
 app.use(notFound);
