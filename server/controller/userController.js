@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const { generateToken } = require("../config/jwtToken");
 const { generateRefreshToken } = require("../config/refreshToken");
+const validateMongoDbId = require("../utils/validateMongodbId");
 
 const createUser = asyncHandler(async (req, res) => {
 	const email = req.body.email;
@@ -53,6 +54,7 @@ const getAllUser = asyncHandler(async (req, res) => {
 
 const getUserById = asyncHandler(async (req, res) => {
 	const { id } = req.params;
+	validateMongoDbId(id);
 	try {
 		const getUserById = await userModel.findById(id);
 		res.json({
@@ -65,6 +67,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
 const deleteUser = asyncHandler(async (req, res) => {
 	const { id } = req.params;
+	validateMongoDbId(id);
 	try {
 		const deleteUser = await userModel.findByIdAndDelete(id);
 		res.json({
@@ -77,6 +80,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 const updatedUser = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
+	validateMongoDbId(_id);
 	try {
 		const updatedUser = await userModel.findByIdAndUpdate(
 			_id,
@@ -95,6 +99,46 @@ const updatedUser = asyncHandler(async (req, res) => {
 	}
 });
 
+const blockUser = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	validateMongoDbId(id);
+	try {
+		const blockusr = await userModel.findByIdAndUpdate(
+			id,
+			{
+				isBlocked: true,
+			},
+			{
+				new: true,
+			}
+		);
+		res.json(blockusr);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+const unblockUser = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	validateMongoDbId(id);
+	try {
+		const unblock = await userModel.findByIdAndUpdate(
+			id,
+			{
+				isBlocked: false,
+			},
+			{
+				new: true,
+			}
+		);
+		res.json({
+			message: "User UnBlocked",
+		});
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
 module.exports = {
 	createUser,
 	loginUser,
@@ -102,4 +146,6 @@ module.exports = {
 	getUserById,
 	deleteUser,
 	updatedUser,
+	blockUser,
+	unblockUser,
 };
