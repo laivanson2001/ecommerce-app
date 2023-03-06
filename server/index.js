@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const dbConnect = require("./config/dbConnect");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const authRouter = require("./routes/authRoute");
+const blogRouter = require("./routes/blogRoute");
 const productRouter = require("./routes/productRoute");
 const dotenv = require("dotenv").config();
 const app = express();
@@ -17,6 +18,7 @@ app.use(morgan("dev"));
 
 app.use("/api/user", authRouter);
 app.use("/api/product", productRouter);
+app.use("/api/blog", blogRouter);
 
 app.use(notFound);
 app.use(errorHandler);
