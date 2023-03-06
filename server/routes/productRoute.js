@@ -3,6 +3,8 @@ const {
 	createProduct,
 	getProduct,
 	getAllProduct,
+	updateProduct,
+	deleteProduct,
 } = require("../controller/productController");
 const { isAdmin, authMiddleware } = require("../middlewares/authMiddleware");
 
@@ -12,5 +14,9 @@ productRouter.get("/", getAllProduct);
 productRouter.get("/:id", getProduct);
 
 productRouter.post("/", authMiddleware, isAdmin, createProduct);
+
+productRouter.put("/:id", authMiddleware, isAdmin, updateProduct);
+
+productRouter.delete("/:id", authMiddleware, isAdmin, deleteProduct);
 
 module.exports = productRouter;

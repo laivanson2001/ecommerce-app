@@ -1,5 +1,6 @@
 const cookieParser = require("cookie-parser");
 const express = require("express");
+const morgan = require("morgan");
 const dbConnect = require("./config/dbConnect");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const authRouter = require("./routes/authRoute");
@@ -12,6 +13,8 @@ dbConnect();
 app.get("/", (req, res) => res.send("Hello World!"));
 app.use(express.json());
 app.use(cookieParser());
+app.use(morgan("dev"));
+
 app.use("/api/user", authRouter);
 app.use("/api/product", productRouter);
 
