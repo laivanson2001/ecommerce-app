@@ -10,8 +10,9 @@ const categoryBlogRouter = require("./routes/categoryBlogRoute");
 const categoryProductRouter = require("./routes/categoryProductRoute");
 const couponRouter = require("./routes/couponRoute");
 const productRouter = require("./routes/productRoute");
-const dotenv = require("dotenv").config();
+const uploadRouter = require("./routes/uploadRoute");
 const app = express();
+const dotenv = require("dotenv").config();
 const port = process.env.PORT || 5000;
 
 dbConnect();
@@ -27,6 +28,7 @@ app.use("/api/category-product", categoryProductRouter);
 app.use("/api/category-blog", categoryBlogRouter);
 app.use("/api/brand", brandRouter);
 app.use("/api/coupon", couponRouter);
+app.use("/api/upload", uploadRouter);
 
 app.use(notFound);
 app.use(errorHandler);
