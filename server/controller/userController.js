@@ -6,6 +6,9 @@ const validateMongoDbId = require("../utils/validateMongodbId");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("./emailController");
 const crypto = require("crypto");
+const cartModel = require("../models/cartModel");
+const productModel = require("../models/productModel");
+const couponModel = require("../models/couponModel");
 
 const createUser = asyncHandler(async (req, res) => {
 	const email = req.body.email;
@@ -294,6 +297,95 @@ const saveAddress = asyncHandler(async (req, res, next) => {
 	}
 });
 
+const userCart = asyncHandler(async (req, res) => {
+	const { cart } = req.body;
+	const { _id } = req.user;
+	validateMongoDbId(_id);
+	try {
+		let products = [];
+		const user = await userModel.findById(_id);
+		const alreadyExistCart = await cartModel.findOne({ orderBy: user._id });
+		if (alreadyExistCart) {
+			alreadyExistCart.remove();
+		}
+		for (let i = 0; i < cart.length; i++) {
+			let object = {};
+			object.product = cart[i]._id;
+			object.count = cart[i].count;
+			object.color = cart[i].color;
+			let getPrice = await productModel
+				.findById(cart[i]._id)
+				.select("price")
+				.exec();
+			object.price = getPrice.price;
+			products.push(object);
+		}
+		let cartTotal = 0;
+		for (let i = 0; i < products.length; i++) {
+			cartTotal = cartTotal + products[i].price * products[i].count;
+		}
+		let newCart = await new cartModel({
+			products,
+			cartTotal,
+			orderBy: user?._id,
+		}).save();
+		res.json(newCart);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+const getUserCart = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	validateMongoDbId(_id);
+	try {
+		const cart = await cartModel
+			.findOne({ orderBy: _id })
+			.populate("products.product");
+		res.json(cart);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+const emptyCart = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	validateMongoDbId(_id);
+	try {
+		const user = await userModel.findOne({ _id });
+		const cart = await cartModel.findOneAndRemove({ orderBy: user._id });
+		res.json(cart);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+const applyCoupon = asyncHandler(async (req, res) => {
+	const { coupon } = req.body;
+	const { _id } = req.user;
+	validateMongoDbId(_id);
+	const validCoupon = await couponModel.findOne({ name: coupon });
+	if (validCoupon === null) {
+		throw new Error("Invalid Coupon");
+	}
+	const user = await userModel.findOne({ _id });
+	let { cartTotal } = await cartModel
+		.findOne({
+			orderBy: user._id,
+		})
+		.populate("products.product");
+	let totalAfterDiscount = (
+		cartTotal -
+		(cartTotal * validCoupon.discount) / 100
+	).toFixed(0);
+	await cartModel.findOneAndUpdate(
+		{ orderBy: user._id },
+		{ totalAfterDiscount },
+		{ new: true }
+	);
+	res.json(totalAfterDiscount);
+});
+
 module.exports = {
 	createUser,
 	loginUser,
@@ -311,4 +403,8 @@ module.exports = {
 	loginAdmin,
 	getWishlist,
 	saveAddress,
+	userCart,
+	getUserCart,
+	emptyCart,
+	applyCoupon,
 };
