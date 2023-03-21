@@ -1,6 +1,14 @@
 import React from "react";
 
-const CustomInput = ({ type, name, placeholder, classname }) => {
+const CustomInput = ({
+	type,
+	name,
+	placeholder,
+	classname,
+	value,
+	onChange,
+	onBlur,
+}) => {
 	return (
 		<div>
 			<input
@@ -8,6 +16,9 @@ const CustomInput = ({ type, name, placeholder, classname }) => {
 				name={name}
 				placeholder={placeholder}
 				className={`form-control ${classname}`}
+				value={value}
+				onChange={onChange}
+				onBlur={onBlur}
 			/>
 		</div>
 	);

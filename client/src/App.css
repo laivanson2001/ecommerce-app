@@ -892,3 +892,8 @@ footer .input-group-text {
 /* Shipping page ends here */
 
 /* Home Page End */
+
+.error {
+  color    : red;
+  font-size: 13px;
+}
