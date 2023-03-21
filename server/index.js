@@ -14,12 +14,16 @@ const uploadRouter = require("./routes/uploadRoute");
 const app = express();
 const dotenv = require("dotenv").config();
 const port = process.env.PORT || 5000;
+const cors = require("cors");
+const colorRouter = require("./routes/colorRoute");
+const enqRouter = require("./routes/enqRoute");
 
 dbConnect();
 app.get("/", (req, res) => res.send("Hello World!"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
+app.use(cors());
 
 app.use("/api/user", authRouter);
 app.use("/api/product", productRouter);
@@ -29,6 +33,8 @@ app.use("/api/category-blog", categoryBlogRouter);
 app.use("/api/brand", brandRouter);
 app.use("/api/coupon", couponRouter);
 app.use("/api/upload", uploadRouter);
+app.use("/api/color", colorRouter);
+app.use("/api/enquiry", enqRouter);
 
 app.use(notFound);
 app.use(errorHandler);

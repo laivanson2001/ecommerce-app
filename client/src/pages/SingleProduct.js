@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -28,7 +28,10 @@ const SingleProduct = () => {
 		document.execCommand("copy");
 		textField.remove();
 	};
-	const closeModal = () => { };
+	const closeModal = () => {};
+	useEffect(() => {
+		setorderedProduct([]);
+	}, []);
 	return (
 		<>
 			<Meta title={"Smart Watch Pro"} />
@@ -38,7 +41,7 @@ const SingleProduct = () => {
 					<div className='col-6'>
 						<div className='main-product-image'>
 							<div>
-								<img src={props.img} alt="" />
+								<img src={props.img} alt='' />
 							</div>
 						</div>
 						<div className='other-product-images d-flex justify-content-center flex-wrap gap-15'>
@@ -61,9 +64,7 @@ const SingleProduct = () => {
 					<div className='col-6'>
 						<div className='main-product-details'>
 							<div className='border-bottom'>
-								<h3 className='title'>
-									Smart Watch Pro
-								</h3>
+								<h3 className='title'>Smart Watch Pro</h3>
 							</div>
 							<div className='border-bottom py-3'>
 								<p className='price'>2.000.000đ</p>
@@ -89,7 +90,9 @@ const SingleProduct = () => {
 									<p className='product-data'>Đồng hồ</p>
 								</div>
 								<div className='d-flex gap-10 align-items-center my-2'>
-									<h3 className='product-heading'>Thương hiệu :</h3>
+									<h3 className='product-heading'>
+										Thương hiệu :
+									</h3>
 									<p className='product-data'>Apple</p>
 								</div>
 								<div className='d-flex gap-10 align-items-center my-2'>
@@ -173,7 +176,10 @@ const SingleProduct = () => {
 										</a>
 									</div>
 								</div>
-								<div className='d-flex gap-10 align-items-center my-3' role='button'>
+								<div
+									className='d-flex gap-10 align-items-center my-3'
+									role='button'
+								>
 									<span
 										onClick={() => {
 											copyToClipboard(
