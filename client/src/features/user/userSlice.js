@@ -2,6 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { authService } from "./userService";
 
+const getCustomerfromLocalStorage = localStorage.getItem("customer")
+	? JSON.parse(localStorage.getItem("customer"))
+	: null;
+
 export const registerUser = createAsyncThunk(
 	"auth/register",
 	async (userData, thunkAPI) => {
@@ -24,8 +28,19 @@ export const loginUser = createAsyncThunk(
 	}
 );
 
+export const getUserWishList = createAsyncThunk(
+	"auth/wishlist",
+	async (thunkAPI) => {
+		try {
+			return await authService.getUserWishList();
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
 const initialState = {
-	user: "",
+	user: getCustomerfromLocalStorage,
 	isError: false,
 	isSuccess: false,
 	isLoading: false,
@@ -80,6 +95,21 @@ export const authSlice = createSlice({
 				if (state.isError) {
 					toast.error("Đăng nhập tài khoản thất bại");
 				}
+			})
+			.addCase(getUserWishList.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getUserWishList.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.wishlist = action.payload;
+			})
+			.addCase(getUserWishList.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
 			});
 	},
 });

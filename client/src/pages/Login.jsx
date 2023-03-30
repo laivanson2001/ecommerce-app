@@ -24,6 +24,7 @@ const Login = () => {
 		validationSchema: loginSchema,
 		onSubmit: (values) => {
 			dispatch(loginUser(values));
+			formik.resetForm();
 		},
 	});
 	return (

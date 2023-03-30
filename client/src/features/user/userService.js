@@ -1,5 +1,5 @@
 import axios from "axios";
-import { base_url } from "../../utils/axiosConfig";
+import { base_url, config } from "../../utils/axiosConfig";
 
 const register = async (userData) => {
 	const response = await axios.post(`${base_url}user/register`, userData);
@@ -11,8 +11,18 @@ const register = async (userData) => {
 const login = async (userData) => {
 	const response = await axios.post(`${base_url}user/login`, userData);
 	if (response.data) {
+		localStorage.setItem("customer", JSON.stringify(response.data));
+	}
+	if (response.data) {
 		return response.data;
 	}
 };
 
-export const authService = { register, login };
+const getUserWishList = async () => {
+	const response = await axios.get(`${base_url}user/wishlist`, config);
+	if (response.data) {
+		return response.data;
+	}
+};
+
+export const authService = { register, login, getUserWishList };

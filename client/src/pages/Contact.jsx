@@ -4,8 +4,33 @@ import Meta from "../components/Meta";
 import { AiOutlineHome, AiOutlineMail } from "react-icons/ai";
 import { BiPhoneCall, BiInfoCircle } from "react-icons/bi";
 import Container from "../components/Container";
+import { useFormik } from "formik";
+import { object, string } from "yup";
+import { useDispatch } from "react-redux";
+import { createQuery } from "../features/contact/contactSlice";
+
+const contactSchema = object({
+	name: string().required("Họ tên trống"),
+	email: string().email("Email không hợp lệ").required("Email trống"),
+	mobile: string().required("Số điện thoại trống"),
+	comment: string().required("Ghi chú trống"),
+});
 
 const Contact = () => {
+	const dispatch = useDispatch();
+	const formik = useFormik({
+		initialValues: {
+			name: "",
+			email: "",
+			mobile: "",
+			comment: "",
+		},
+		validationSchema: contactSchema,
+		onSubmit: (values) => {
+			dispatch(createQuery(values));
+			formik.resetForm();
+		},
+	});
 	return (
 		<>
 			<Meta title={"Liên hệ"} />
@@ -33,40 +58,85 @@ const Contact = () => {
 								<form
 									action=''
 									className='d-flex flex-column gap-15'
+									onSubmit={formik.handleSubmit}
 								>
 									<div>
 										<input
 											type='text'
 											className='form-control'
 											placeholder='Họ tên'
+											name='name'
+											onChange={formik.handleChange(
+												"name"
+											)}
+											onBlur={formik.handleBlur("name")}
+											value={formik.values.name}
 										/>
+										<div className='error'>
+											{formik.touched.name &&
+												formik.errors.name}
+										</div>
 									</div>
 									<div>
 										<input
 											type='email'
 											className='form-control'
 											placeholder='Email'
+											name='email'
+											onChange={formik.handleChange(
+												"email"
+											)}
+											onBlur={formik.handleBlur("email")}
+											value={formik.values.email}
 										/>
+										<div className='error'>
+											{formik.touched.email &&
+												formik.errors.email}
+										</div>
 									</div>
 									<div>
 										<input
 											type='tel'
 											className='form-control'
 											placeholder='Điện thoại'
+											name='mobile'
+											onChange={formik.handleChange(
+												"mobile"
+											)}
+											onBlur={formik.handleBlur("mobile")}
+											value={formik.values.mobile}
 										/>
+										<div className='error'>
+											{formik.touched.mobile &&
+												formik.errors.mobile}
+										</div>
 									</div>
 									<div>
 										<textarea
-											name=''
 											id=''
 											className='w-100 form-control'
 											cols='30'
 											rows='4'
 											placeholder='Ghi chú'
+											name='comment'
+											onChange={formik.handleChange(
+												"comment"
+											)}
+											onBlur={formik.handleBlur(
+												"comment"
+											)}
+											value={formik.values.comment}
 										></textarea>
+										<div className='error'>
+											{formik.touched.comment &&
+												formik.errors.comment}
+										</div>
 									</div>
 									<div>
-										<button className='button border-0 w-25'>
+										<button
+											type='submit'
+											className='button border-0 w-25'
+										>
 											Gửi
 										</button>
 									</div>

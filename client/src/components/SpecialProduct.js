@@ -1,9 +1,8 @@
 import React from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link } from "react-router-dom";
-import watch from "../images/watch.jpg";
 
-const SpecialProduct = () => {
+const SpecialProduct = ({ item }) => {
 	return (
 		<>
 			<div className='col-4 mb-3'>
@@ -11,24 +10,29 @@ const SpecialProduct = () => {
 					<div className='d-flex justify-content-between'>
 						<div>
 							<img
-								src={watch}
+								src={item.images[0].url}
 								className='img-fluid'
 								alt='watch'
 							/>
 						</div>
 						<div className='special-product-content'>
-							<h5 className='brand'>Apple</h5>
-							<h6 className='title'>Apple Watch SE 2022</h6>
+							<h5 className='brand'>{item.brand}</h5>
+							<h6 className='title text-truncate-2'>
+								{item.title}
+							</h6>
 							<ReactStars
 								count={5}
 								size={24}
-								value={4}
+								value={Number(item.totalRating)}
 								edit={false}
 								activeColor='#ffd700'
 							/>
 							<p className='price'>
-								<span className='red-p'>2.000.000đ</span> &nbsp;{" "}
-								<strike>2.300.000đ</strike>
+								<span className='red-p'>
+									{new Intl.NumberFormat().format(item.price)}
+									đ
+								</span>{" "}
+								{/* &nbsp; <strike>2.300.000đ</strike> */}
 							</p>
 							<div className='discount-till d-flex align-items-center gap-10'>
 								<p className='mb-0'>
@@ -49,15 +53,28 @@ const SpecialProduct = () => {
 								</div>
 							</div>
 							<div className='prod-count my-3'>
-								<p>Số lượng: 5</p>
+								<p>Số lượng: {item.quantity}</p>
 								<div className='progress'>
 									<div
 										className='progress-bar'
 										role='progressbar'
-										style={{ width: "25%" }}
-										aria-valuenow='25'
-										aria-valuemin='0'
-										aria-valuemax='100'
+										style={{
+											width:
+												(item.sold /
+													(item.quantity +
+														item.sold)) *
+													100 +
+												"%",
+										}}
+										aria-valuenow={
+											(item.sold /
+												(item.quantity + item.sold)) *
+											100
+										}
+										aria-valuemin={0}
+										aria-valuemax={
+											item.sold + item.quantity
+										}
 									></div>
 								</div>
 							</div>

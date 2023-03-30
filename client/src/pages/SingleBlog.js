@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
-import blog from "../images/blog-1.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getABlog } from "../features/blogs/blogSlide";
 
 const SingleBlog = () => {
+	const dispatch = useDispatch();
+	const { id } = useParams();
+	const blogState = useSelector((state) => state.blog.singleBlog);
+	const getSingleBlog = () => {
+		dispatch(getABlog(id));
+	};
+	useEffect(() => {
+		getSingleBlog();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	return (
 		<>
 			<Meta title={"Lorem ipsum"} />
@@ -26,21 +38,17 @@ const SingleBlog = () => {
 					</div>
 					<div className='col-9'>
 						<div className='single-blog-card'>
-							<h3 className='title'>
-								Lorem ipsum dolor sit amet.
-							</h3>
+							<h3 className='title'>{blogState.title}</h3>
 							<img
-								src={blog}
+								src={blogState.images[0].url}
 								className='img-fluid w-100 my-4'
 								alt='blog'
 							/>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur
-								adipisicing elit. Quo beatae quidem iste
-								similique commodi. Alias excepturi totam omnis,
-								veritatis repudiandae ab fugiat odit qui
-								praesentium? Rem dolore ad numquam officiis.
-							</p>
+							<p
+								dangerouslySetInnerHTML={{
+									__html: blogState.description,
+								}}
+							></p>
 						</div>
 					</div>
 				</div>

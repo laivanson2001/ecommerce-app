@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Color from "../components/Color";
@@ -6,9 +6,21 @@ import Container from "../components/Container";
 import Meta from "../components/Meta";
 import ProductCard from "../components/ProductCard";
 import watch from "../images/watch.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../features/products/productSlice";
 
 const OurStore = () => {
 	const [grid, setGrid] = useState(4);
+	const dispatch = useDispatch();
+	const productState = useSelector((state) => state.product);
+	const { product } = productState;
+	const getProducts = () => {
+		dispatch(getAllProducts());
+	};
+	useEffect(() => {
+		getProducts();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	return (
 		<>
 			<Meta title='Cửa hàng' />
@@ -272,7 +284,10 @@ const OurStore = () => {
 						</div>
 						<div className='products-list pb-5'>
 							<div className='d-flex gap-10 flex-wrap'>
-								<ProductCard grid={grid} />
+								<ProductCard
+									grid={grid}
+									data={product ? product : []}
+								/>
 							</div>
 						</div>
 					</div>
