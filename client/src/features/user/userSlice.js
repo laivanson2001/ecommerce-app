@@ -39,6 +39,28 @@ export const getUserWishList = createAsyncThunk(
 	}
 );
 
+export const addCart = createAsyncThunk(
+	"auth/cart",
+	async (cartData, thunkAPI) => {
+		try {
+			return await authService.addToCart(cartData);
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
+export const getUserCart = createAsyncThunk(
+	"auth/cart/get",
+	async (thunkAPI) => {
+		try {
+			return await authService.getCart();
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
 const initialState = {
 	user: getCustomerfromLocalStorage,
 	isError: false,
@@ -106,6 +128,39 @@ export const authSlice = createSlice({
 				state.wishlist = action.payload;
 			})
 			.addCase(getUserWishList.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+			})
+			.addCase(addCart.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(addCart.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.cart = action.payload;
+				if (state.isSuccess) {
+					toast.success("Thêm giỏ hàng thành công");
+				}
+			})
+			.addCase(addCart.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+			})
+			.addCase(getUserCart.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getUserCart.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.cartProducts = action.payload;
+			})
+			.addCase(getUserCart.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.isSuccess = false;

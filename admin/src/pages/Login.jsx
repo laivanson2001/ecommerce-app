@@ -30,9 +30,9 @@ const Login = () => {
 	});
 	useEffect(() => {
 		if (user !== null || isSuccess) {
-			navigate("admin");
+			navigate("/admin");
 		} else {
-			navigate("");
+			navigate("/");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, isError, isSuccess, isLoading]);

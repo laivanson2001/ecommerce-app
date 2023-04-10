@@ -6,16 +6,26 @@ import ProductCard from "../components/ProductCard";
 import Color from "../components/Color";
 import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart, AiOutlineLink } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Container from "../components/Container";
 import watch from "../images/watch.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { getAProduct } from "../features/products/productSlice";
+import { toast } from "react-toastify";
+import { addCart } from "../features/user/userSlice";
 
 const SingleProduct = () => {
+	const [color, setColor] = useState(null);
+	const [quantity, setQuantity] = useState(1);
+	const location = useLocation();
+	const getProductId = location.pathname.split("/")[2];
+	const dispatch = useDispatch();
+	const productState = useSelector((state) => state.product.singleProduct);
 	const props = {
 		width: 594,
 		height: 600,
 		zoomWidth: 600,
-		img: "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
+		img: productState?.images[0]?.url ? productState?.images[0]?.url : "",
 	};
 
 	const [orderedProduct, setorderedProduct] = useState(true);
@@ -29,9 +39,26 @@ const SingleProduct = () => {
 		textField.remove();
 	};
 	const closeModal = () => {};
+
+	const addToCart = () => {
+		if (color === null) {
+			toast.error("Vui lòng chọn màu");
+			return false;
+		} else {
+			dispatch(
+				addCart({
+					productId: productState._id,
+					color,
+					quantity,
+					price: productState.price,
+				})
+			);
+		}
+	};
 	useEffect(() => {
 		setorderedProduct([]);
-	}, []);
+		dispatch(getAProduct(getProductId));
+	}, [dispatch, getProductId]);
 	return (
 		<>
 			<Meta title={"Smart Watch Pro"} />
@@ -45,34 +72,34 @@ const SingleProduct = () => {
 							</div>
 						</div>
 						<div className='other-product-images d-flex justify-content-center flex-wrap gap-15'>
-							<div>
-								<img
-									src='https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg'
-									className='img-fluid'
-									alt=''
-								/>
-							</div>
-							<div>
-								<img
-									src='https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg'
-									className='img-fluid'
-									alt=''
-								/>
-							</div>
+							{productState?.images.map((image, index) => (
+								<div key={index}>
+									<img
+										src={image?.url}
+										className='img-fluid'
+										alt=''
+									/>
+								</div>
+							))}
 						</div>
 					</div>
 					<div className='col-6'>
 						<div className='main-product-details'>
 							<div className='border-bottom'>
-								<h3 className='title'>Smart Watch Pro</h3>
+								<h3 className='title'>{productState?.title}</h3>
 							</div>
 							<div className='border-bottom py-3'>
-								<p className='price'>2.000.000đ</p>
+								<p className='price'>
+									{new Intl.NumberFormat().format(
+										productState?.price
+									)}
+									đ
+								</p>
 								<div className='d-flex align-items-center gap-10'>
 									<ReactStars
 										count={5}
 										size={24}
-										value={4}
+										value={productState?.totalrating}
 										edit={false}
 										activeColor='#ffd700'
 									/>
@@ -93,17 +120,23 @@ const SingleProduct = () => {
 									<h3 className='product-heading'>
 										Thương hiệu :
 									</h3>
-									<p className='product-data'>Apple</p>
+									<p className='product-data'>
+										{productState?.brand}
+									</p>
 								</div>
 								<div className='d-flex gap-10 align-items-center my-2'>
 									<h3 className='product-heading'>
 										Danh mục :
 									</h3>
-									<p className='product-data'>Đồng hồ</p>
+									<p className='product-data'>
+										{productState?.category}
+									</p>
 								</div>
 								<div className='d-flex gap-10 align-items-center my-2'>
 									<h3 className='product-heading'>Tags :</h3>
-									<p className='product-data'>Đồng hồ</p>
+									<p className='product-data'>
+										{productState?.tags}
+									</p>
 								</div>
 								<div className='d-flex gap-10 align-items-center my-2'>
 									<h3 className='product-heading'>
@@ -130,7 +163,10 @@ const SingleProduct = () => {
 								</div>
 								<div className='d-flex gap-10 flex-column mt-2 mb-3'>
 									<h3 className='product-heading'>Color :</h3>
-									<Color />
+									<Color
+										colorData={productState?.color}
+										setColor={setColor}
+									/>
 								</div>
 								<div className='d-flex align-items-center gap-15 flex-row mt-2 mb-3'>
 									<h3 className='product-heading'>
@@ -145,15 +181,19 @@ const SingleProduct = () => {
 											className='form-control'
 											style={{ width: "70px" }}
 											id=''
-											defaultValue={1}
+											value={quantity}
+											onChange={(e) =>
+												setQuantity(e.target.value)
+											}
 										/>
 									</div>
 									<div className='d-flex align-items-center gap-30 ms-5'>
 										<button
 											className='button border-0'
-											data-bs-toggle='modal'
-											data-bs-target='#staticBackdrop'
+											// data-bs-toggle='modal'
+											// data-bs-target='#staticBackdrop'
 											type='button'
+											onClick={() => addToCart()}
 										>
 											Thêm giỏ hàng
 										</button>
@@ -183,7 +223,7 @@ const SingleProduct = () => {
 									<span
 										onClick={() => {
 											copyToClipboard(
-												"https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
+												window.location.href
 											);
 										}}
 									>
@@ -201,13 +241,11 @@ const SingleProduct = () => {
 					<div className='col-12'>
 						<h4>Mô tả</h4>
 						<div className='bg-white p-3'>
-							<p>
-								Lorem ipsum dolor, sit amet consectetur
-								adipisicing elit. Tenetur nisi similique illum
-								aut perferendis voluptas, quisquam obcaecati qui
-								nobis officia. Voluptatibus in harum deleniti
-								labore maxime officia esse eos? Repellat?
-							</p>
+							<p
+								dangerouslySetInnerHTML={{
+									__html: productState?.description,
+								}}
+							></p>
 						</div>
 					</div>
 				</div>
@@ -322,7 +360,7 @@ const SingleProduct = () => {
 			>
 				<div className='modal-dialog modal-dialog-centered '>
 					<div className='modal-content'>
-						<div className='modal-header py-0 border-0'>
+						<div className='modal-header py-4 border-0'>
 							<button
 								type='button'
 								className='btn-close'
@@ -341,8 +379,8 @@ const SingleProduct = () => {
 								</div>
 								<div className='d-flex flex-column flex-grow-1 w-50'>
 									<h6 className='mb-3'>Apple Watch</h6>
-									<p className='mb-1'>Quantity: asgfd</p>
-									<p className='mb-1'>Color: asgfd</p>
+									<p className='mb-1'>Số lượng: asgfd</p>
+									<p className='mb-1'>Màu sắc: asgfd</p>
 									<p className='mb-1'>Size: asgfd</p>
 								</div>
 							</div>
@@ -353,13 +391,13 @@ const SingleProduct = () => {
 								className='button'
 								data-bs-dismiss='modal'
 							>
-								View My Cart
+								Xem giỏ hàng
 							</button>
 							<button type='button' className='button signup'>
-								Checkout
+								Thanh toán
 							</button>
 						</div>
-						<div className='d-flex justify-content-center py-3'>
+						<div className='d-flex justify-content-center py-3 mb-4'>
 							<Link
 								className='text-dark'
 								to='/product'
@@ -367,7 +405,7 @@ const SingleProduct = () => {
 									closeModal();
 								}}
 							>
-								Continue To Shopping
+								Tiếp tục mua
 							</Link>
 						</div>
 					</div>

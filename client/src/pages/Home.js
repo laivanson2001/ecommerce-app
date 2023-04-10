@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Marquee from "react-fast-marquee";
 import ReactStars from "react-rating-stars-component";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BlogCard from "../components/BlogCard";
 import Container from "../components/Container";
 import SpecialProduct from "../components/SpecialProduct";
@@ -19,6 +19,7 @@ import prodcompare from "../images/prodcompare.svg";
 const Home = () => {
 	const dispatch = useDispatch();
 	const productState = useSelector((state) => state.product.product);
+	const navigate = useNavigate();
 	const getProducts = () => {
 		dispatch(getAllProducts());
 	};
@@ -259,16 +260,7 @@ const Home = () => {
 							.filter((item) => item.tags[0] === "featured")
 							.map((item, index) => (
 								<div className='col-3' key={index}>
-									<Link
-										// to={`${
-										// 	location.pathname === "/"
-										// 		? "/product/:id"
-										// 		: location.pathname === "/product/:id"
-										// 		? "/product/:id"
-										// 		: ":id"
-										// }`}
-										className='product-card position-relative'
-									>
+									<div className='product-card position-relative'>
 										<div className='wishlist-icon position-absolute'>
 											<button
 												className='border-0 bg-transparent'
@@ -325,7 +317,14 @@ const Home = () => {
 														alt='compare'
 													/>
 												</button>
-												<button className='border-0 bg-transparent'>
+												<button
+													onClick={() =>
+														navigate(
+															`/product/${item?._id}`
+														)
+													}
+													className='border-0 bg-transparent'
+												>
 													<img
 														src={view}
 														alt='view'
@@ -339,7 +338,7 @@ const Home = () => {
 												</button>
 											</div>
 										</div>
-									</Link>
+									</div>
 								</div>
 							))}
 				</div>
@@ -435,16 +434,7 @@ const Home = () => {
 							.filter((item) => item.tags[0] === "popular")
 							.map((item, index) => (
 								<div className='col-3' key={index}>
-									<Link
-										// to={`${
-										// 	location.pathname === "/"
-										// 		? "/product/:id"
-										// 		: location.pathname === "/product/:id"
-										// 		? "/product/:id"
-										// 		: ":id"
-										// }`}
-										className='product-card position-relative'
-									>
+									<div className='product-card position-relative'>
 										<div className='wishlist-icon position-absolute'>
 											<button
 												className='border-0 bg-transparent'
@@ -501,7 +491,14 @@ const Home = () => {
 														alt='compare'
 													/>
 												</button>
-												<button className='border-0 bg-transparent'>
+												<button
+													onClick={() =>
+														navigate(
+															`/product/${item?._id}`
+														)
+													}
+													className='border-0 bg-transparent'
+												>
 													<img
 														src={view}
 														alt='view'
@@ -515,7 +512,7 @@ const Home = () => {
 												</button>
 											</div>
 										</div>
-									</Link>
+									</div>
 								</div>
 							))}
 				</div>

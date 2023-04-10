@@ -78,7 +78,12 @@ const SpecialProduct = ({ item }) => {
 									></div>
 								</div>
 							</div>
-							<Link className='button'>Thêm giỏ hàng</Link>
+							<Link
+								to={`/product/${item._id}`}
+								className='button'
+							>
+								Xem chi tiết
+							</Link>
 						</div>
 					</div>
 				</div>

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAColor, getColors } from "../features/color/colorSlice";
+import {
+	deleteAColor,
+	getColors,
+	resetState,
+} from "../features/color/colorSlice";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
@@ -35,6 +39,7 @@ const ColorList = () => {
 	};
 	const dispatch = useDispatch();
 	useEffect(() => {
+		dispatch(resetState());
 		dispatch(getColors());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
