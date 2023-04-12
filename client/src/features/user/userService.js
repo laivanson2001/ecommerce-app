@@ -39,10 +39,44 @@ const getCart = async () => {
 	}
 };
 
+const removeCart = async (id) => {
+	const response = await axios.delete(
+		`${base_url}user/delete-product-cart/${id}`,
+		config
+	);
+	if (response.data) {
+		return response.data;
+	}
+};
+
+const updateQuantity = async (cartDetail) => {
+	const response = await axios.delete(
+		`${base_url}user/update-quantity/${cartDetail.cartItemId}/${cartDetail.quantity}`,
+		config
+	);
+	if (response.data) {
+		return response.data;
+	}
+};
+
+const createOrder = async (orderDetail) => {
+	const response = await axios.post(
+		`${base_url}user/cart/create-order`,
+		orderDetail,
+		config
+	);
+	if (response.data) {
+		return response.data;
+	}
+};
+
 export const authService = {
 	register,
 	login,
 	getUserWishList,
 	addToCart,
 	getCart,
+	removeCart,
+	updateQuantity,
+	createOrder,
 };

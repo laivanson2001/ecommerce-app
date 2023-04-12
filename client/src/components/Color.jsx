@@ -10,7 +10,7 @@ const Color = ({ colorData, setColor }) => {
 							key={index}
 							style={{ backgroundColor: item?.title }}
 							value={item?._id}
-							onClick={setColor(item?._id)}
+							onClick={() => setColor(item?._id)}
 						></li>
 					))}
 			</ul>

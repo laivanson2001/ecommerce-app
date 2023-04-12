@@ -6,21 +6,27 @@ import ProductCard from "../components/ProductCard";
 import Color from "../components/Color";
 import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart, AiOutlineLink } from "react-icons/ai";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "../components/Container";
 import watch from "../images/watch.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { getAProduct } from "../features/products/productSlice";
 import { toast } from "react-toastify";
-import { addCart } from "../features/user/userSlice";
+import { addCart, getUserCart } from "../features/user/userSlice";
 
 const SingleProduct = () => {
 	const [color, setColor] = useState(null);
 	const [quantity, setQuantity] = useState(1);
+	const [alreadyAdded, setAlreadyAdded] = useState(false);
+
 	const location = useLocation();
 	const getProductId = location.pathname.split("/")[2];
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const productState = useSelector((state) => state.product.singleProduct);
+	const cartState = useSelector((state) => state.auth.cartProducts);
+
 	const props = {
 		width: 594,
 		height: 600,
@@ -53,12 +59,20 @@ const SingleProduct = () => {
 					price: productState.price,
 				})
 			);
+			navigate("/cart");
 		}
 	};
 	useEffect(() => {
 		setorderedProduct([]);
 		dispatch(getAProduct(getProductId));
-	}, [dispatch, getProductId]);
+		dispatch(getUserCart());
+		for (let i = 0; i < cartState?.length; i++) {
+			if (getProductId === cartState[i]?.productId?._id) {
+				setAlreadyAdded(true);
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	return (
 		<>
 			<Meta title={"Smart Watch Pro"} />
@@ -135,7 +149,9 @@ const SingleProduct = () => {
 								<div className='d-flex gap-10 align-items-center my-2'>
 									<h3 className='product-heading'>Tags :</h3>
 									<p className='product-data'>
-										{productState?.tags}
+										{productState?.tags[0] === "featured"
+											? "Phổ biến"
+											: ""}
 									</p>
 								</div>
 								<div className='d-flex gap-10 align-items-center my-2'>
@@ -161,45 +177,68 @@ const SingleProduct = () => {
 										</span>
 									</div>
 								</div>
-								<div className='d-flex gap-10 flex-column mt-2 mb-3'>
-									<h3 className='product-heading'>Color :</h3>
-									<Color
-										colorData={productState?.color}
-										setColor={setColor}
-									/>
-								</div>
-								<div className='d-flex align-items-center gap-15 flex-row mt-2 mb-3'>
-									<h3 className='product-heading'>
-										Số lượng :
-									</h3>
-									<div className=''>
-										<input
-											type='number'
-											name=''
-											min={1}
-											max={10}
-											className='form-control'
-											style={{ width: "70px" }}
-											id=''
-											value={quantity}
-											onChange={(e) =>
-												setQuantity(e.target.value)
-											}
+								{!alreadyAdded && (
+									<div className='d-flex gap-10 flex-column mt-2 mb-3'>
+										<h3 className='product-heading'>
+											Color :
+										</h3>
+										<Color
+											colorData={productState?.color}
+											setColor={setColor}
 										/>
 									</div>
-									<div className='d-flex align-items-center gap-30 ms-5'>
+								)}
+								<div className='d-flex align-items-center gap-15 flex-row mt-2 mb-3'>
+									{!alreadyAdded && (
+										<>
+											<h3 className='product-heading'>
+												Số lượng :
+											</h3>
+											<div className=''>
+												<input
+													type='number'
+													name=''
+													min={1}
+													max={10}
+													className='form-control'
+													style={{ width: "70px" }}
+													id=''
+													value={quantity}
+													onChange={(e) =>
+														setQuantity(
+															e.target.value
+														)
+													}
+												/>
+											</div>
+										</>
+									)}
+									<div
+										className={
+											alreadyAdded
+												? "ms-0"
+												: "ms-5" +
+												  "d-flex align-items-center gap-30"
+										}
+									>
 										<button
 											className='button border-0'
 											// data-bs-toggle='modal'
 											// data-bs-target='#staticBackdrop'
 											type='button'
-											onClick={() => addToCart()}
+											onClick={() => {
+												alreadyAdded
+													? navigate("/cart")
+													: addToCart();
+											}}
 										>
-											Thêm giỏ hàng
+											{alreadyAdded
+												? "Xem giỏ hàng"
+												: "Thêm giỏ hàng"}
 										</button>
-										<button className='button signup'>
+										{/* <button className='button signup'>
 											Mua ngay
-										</button>
+										</button> */}
 									</div>
 								</div>
 								<div className='d-flex align-items-center gap-15'>

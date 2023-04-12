@@ -15,6 +15,7 @@ import wish from "../images/wish.svg";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 import prodcompare from "../images/prodcompare.svg";
+import { getUserCart } from "../features/user/userSlice";
 
 const Home = () => {
 	const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const Home = () => {
 	useEffect(() => {
 		getProducts();
 		getBlogs();
+		dispatch(getUserCart());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (

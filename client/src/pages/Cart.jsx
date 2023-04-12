@@ -1,19 +1,47 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
-import watch from "../images/watch.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserCart } from "../features/user/userSlice";
+import {
+	getUserCart,
+	removeProductCart,
+	updateQuantity,
+} from "../features/user/userSlice";
 
 const Cart = () => {
+	const [productDetail, setproductDetail] = useState(null);
+	const [totalAmount, setTotalAmount] = useState(null);
 	const dispatch = useDispatch();
 	const cartUserState = useSelector((state) => state.auth.cartProducts);
+
+	const updateCart = (id, quantity) => {
+		dispatch(updateQuantity({ cartItemId: id, quantity }));
+		setTimeout(() => {
+			dispatch(getUserCart());
+		}, 300);
+	};
 	useEffect(() => {
 		dispatch(getUserCart());
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dispatch]);
+	useEffect(() => {
+		if (productDetail !== null) {
+			updateCart(productDetail.id, productDetail.quantity);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [productDetail]);
+	useEffect(() => {
+		setTotalAmount(
+			cartUserState?.reduce(
+				(totalAmount, state) =>
+					totalAmount + state.quantity * state.price,
+				0
+			)
+		);
+	}, [cartUserState]);
 	return (
 		<>
 			<Meta title={"Giỏ hàng"} />
@@ -73,11 +101,36 @@ const Cart = () => {
 											<input
 												className='form-control'
 												type='number'
-												defaultValue={item.quantity}
+												value={
+													productDetail &&
+													productDetail.id ===
+														item._id
+														? productDetail.quantity
+														: item.quantity
+												}
+												onChange={(e) =>
+													setproductDetail({
+														id: item._id,
+														quantity:
+															e.target.value,
+													})
+												}
 											/>
 										</div>
 										<div>
-											<AiFillDelete className='text-danger ' />
+											<AiFillDelete
+												onClick={() => {
+													dispatch(
+														removeProductCart(
+															item._id
+														)
+													);
+													setTimeout(() => {
+														dispatch(getUserCart());
+													}, 300);
+												}}
+												className='text-danger '
+											/>
 										</div>
 									</div>
 									<div className='cart-col-4'>
@@ -97,12 +150,20 @@ const Cart = () => {
 							<Link to='/product' className='button'>
 								Tiếp tục mua
 							</Link>
-							<div className='d-flex flex-column align-items-end gap-3'>
-								<h4>Thành tiền: 2.000.000đ</h4>
-								<Link to='/checkout' className='button'>
-									Thanh toán
-								</Link>
-							</div>
+							{totalAmount && (
+								<div className='d-flex flex-column align-items-end gap-3'>
+									<h4>
+										Thành tiền:{" "}
+										{new Intl.NumberFormat().format(
+											totalAmount
+										)}
+										đ
+									</h4>
+									<Link to='/checkout' className='button'>
+										Thanh toán
+									</Link>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>

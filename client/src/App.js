@@ -21,6 +21,7 @@ import SingleBlog from "./pages/SingleBlog";
 import SingleProduct from "./pages/SingleProduct";
 import TermAndContions from "./pages/TermAndContions";
 import Wishlist from "./pages/Wishlist";
+import PrivateRoutes from "./routing/PrivateRoutes";
 
 function App() {
 	return (
@@ -28,6 +29,15 @@ function App() {
 			<HelmetProvider>
 				<Routes>
 					<Route path='/' element={<Layout />}>
+						<Route element={<PrivateRoutes />}>
+							<Route path='cart' element={<Cart />} />
+							<Route path='checkout' element={<Checkout />} />
+							<Route
+								path='compare-product'
+								element={<CompareProduct />}
+							/>
+							<Route path='wishlist' element={<Wishlist />} />
+						</Route>
 						<Route index element={<Home />} />
 						<Route path='about' element={<About />} />
 						<Route path='contact' element={<Contact />} />
@@ -35,13 +45,7 @@ function App() {
 						<Route path='product/:id' element={<SingleProduct />} />
 						<Route path='blogs' element={<Blog />} />
 						<Route path='blog/:id' element={<SingleBlog />} />
-						<Route path='cart' element={<Cart />} />
-						<Route path='checkout' element={<Checkout />} />
-						<Route
-							path='compare-product'
-							element={<CompareProduct />}
-						/>
-						<Route path='wishlist' element={<Wishlist />} />
+
 						<Route path='login' element={<Login />} />
 						<Route
 							path='forgot-password'

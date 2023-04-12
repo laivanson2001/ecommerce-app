@@ -40,7 +40,7 @@ export const getUserWishList = createAsyncThunk(
 );
 
 export const addCart = createAsyncThunk(
-	"auth/cart",
+	"auth/add-cart",
 	async (cartData, thunkAPI) => {
 		try {
 			return await authService.addToCart(cartData);
@@ -51,10 +51,43 @@ export const addCart = createAsyncThunk(
 );
 
 export const getUserCart = createAsyncThunk(
-	"auth/cart/get",
+	"auth/get-cart",
 	async (thunkAPI) => {
 		try {
 			return await authService.getCart();
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
+export const removeProductCart = createAsyncThunk(
+	"auth/remove-cart",
+	async (id, thunkAPI) => {
+		try {
+			return await authService.removeCart(id);
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
+export const updateQuantity = createAsyncThunk(
+	"auth/update-quantity",
+	async (cartDetail, thunkAPI) => {
+		try {
+			return await authService.updateQuantity(cartDetail);
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
+export const createOrder = createAsyncThunk(
+	"auth/create-order",
+	async (orderDetail, thunkAPI) => {
+		try {
+			return await authService.createOrder(orderDetail);
 		} catch (error) {
 			return thunkAPI.rejectWithValue(error);
 		}
@@ -140,7 +173,7 @@ export const authSlice = createSlice({
 				state.isLoading = false;
 				state.isError = false;
 				state.isSuccess = true;
-				state.cart = action.payload;
+				state.cartProduct = action.payload;
 				if (state.isSuccess) {
 					toast.success("Thêm giỏ hàng thành công");
 				}
@@ -161,6 +194,60 @@ export const authSlice = createSlice({
 				state.cartProducts = action.payload;
 			})
 			.addCase(getUserCart.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+			})
+			.addCase(removeProductCart.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(removeProductCart.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.deletedProductCart = action.payload;
+				if (state.isSuccess) {
+					toast.success("Xóa khỏi giỏ hàng thành công");
+				}
+			})
+			.addCase(removeProductCart.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+			})
+			.addCase(updateQuantity.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateQuantity.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.updatedProductCart = action.payload;
+				if (state.isSuccess) {
+					toast.success("Đã cập nhật");
+				}
+			})
+			.addCase(updateQuantity.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+			})
+			.addCase(createOrder.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(createOrder.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.createOrder = action.payload;
+				if (state.isSuccess) {
+					toast.success("Đặt đơn thành công");
+				}
+			})
+			.addCase(createOrder.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.isSuccess = false;

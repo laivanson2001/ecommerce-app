@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import compare from "../images/compare.svg";
@@ -6,8 +6,22 @@ import wishlist from "../images/wishlist.svg";
 import user from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+	const [totalAmount, setTotalAmount] = useState(null);
+	const cartItems = useSelector((state) => state.auth.cartProducts);
+	const authState = useSelector((state) => state.auth);
+	useEffect(() => {
+		setTotalAmount(
+			cartItems?.reduce(
+				(totalAmount, state) =>
+					totalAmount + state.quantity * state.price,
+				0
+			)
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cartItems]);
 	return (
 		<>
 			<header className='header-top-strip py-3'>
@@ -81,11 +95,19 @@ const Header = () => {
 								</div>
 								<div className=''>
 									<Link
-										to='login'
+										to={
+											authState.user === null
+												? "/login"
+												: ""
+										}
 										className='d-flex align-items-center gap-10 text-white'
 									>
 										<img src={user} alt='' />
-										<p className='mb-0'>Tài khoản</p>
+										<p className='mb-0'>
+											{authState.user === null
+												? "Tài khoản"
+												: authState.user.name}
+										</p>
 									</Link>
 								</div>
 								<div className=''>
@@ -94,12 +116,22 @@ const Header = () => {
 										className='d-flex align-items-center gap-10 text-white'
 									>
 										<img src={cart} alt='' />
-										<div className='d-flex flex-column gap-10'>
-											<span className='badge bg-white text-dark'>
-												0
-											</span>
-											<p className='mb-0'>100000đ</p>
-										</div>
+										{cartItems?.length > 0 && (
+											<div className='d-flex flex-column gap-10'>
+												<span
+													className='badge bg-white text-dark'
+													style={{ width: "30px" }}
+												>
+													{cartItems?.length}
+												</span>
+												<p className='mb-0'>
+													{new Intl.NumberFormat().format(
+														totalAmount
+													)}
+													đ
+												</p>
+											</div>
+										)}
 									</Link>
 								</div>
 							</div>
