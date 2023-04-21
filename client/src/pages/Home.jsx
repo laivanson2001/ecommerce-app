@@ -259,7 +259,7 @@ const Home = () => {
 				<div className='row'>
 					{productState.length > 0 &&
 						productState
-							.filter((item) => item.tags[0] === "featured")
+							.filter((item) => item.tags === "featured")
 							.map((item, index) => (
 								<div className='col-3' key={index}>
 									<div className='product-card position-relative'>
@@ -418,7 +418,7 @@ const Home = () => {
 				<div className='row'>
 					{productState.length > 0 &&
 						productState
-							.filter((item) => item.tags[0] === "special")
+							.filter((item) => item.tags === "special")
 							.map((item, index) => (
 								<SpecialProduct item={item} key={index} />
 							))}
@@ -433,7 +433,7 @@ const Home = () => {
 				<div className='row'>
 					{productState.length > 0 &&
 						productState
-							.filter((item) => item.tags[0] === "popular")
+							.filter((item) => item.tags === "popular")
 							.map((item, index) => (
 								<div className='col-3' key={index}>
 									<div className='product-card position-relative'>

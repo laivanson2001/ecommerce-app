@@ -11,7 +11,6 @@ const productModel = require("../models/productModel");
 const couponModel = require("../models/couponModel");
 const orderModel = require("../models/orderModel");
 const uniqid = require("uniqid");
-const { log } = require("console");
 
 const createUser = asyncHandler(async (req, res) => {
 	const email = req.body.email;
@@ -210,7 +209,7 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
 	try {
 		const token = await user.createPasswordResetToken();
 		await user.save();
-		const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href='http://localhost:8000/api/user/reset-password/${token}'>Click Here</>`;
+		const resetURL = `Xin chào, Vui lòng click liên kết này để đặt lại Mật khẩu của bạn. Liên kết này có giá trị đến 10 phút kể từ bây giờ. <a href='http://localhost:3000/reset-password/${token}'>Click đây</>`;
 		const data = {
 			to: email,
 			text: "Hey User",
@@ -391,152 +390,160 @@ const createOrder = asyncHandler(async (req, res) => {
 	}
 });
 
-// const emptyCart = asyncHandler(async (req, res) => {
-// 	const { _id } = req.user;
-// 	validateMongoDbId(_id);
-// 	try {
-// 		const user = await userModel.findOne({ _id });
-// 		const cart = await cartModel.findOneAndRemove({ orderBy: user._id });
-// 		res.json(cart);
-// 	} catch (error) {
-// 		throw new Error(error);
-// 	}
-// });
+const getMyOrders = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
 
-// const applyCoupon = asyncHandler(async (req, res) => {
-// 	const { coupon } = req.body;
-// 	const { _id } = req.user;
-// 	validateMongoDbId(_id);
-// 	const validCoupon = await couponModel.findOne({ name: coupon });
-// 	if (validCoupon === null) {
-// 		throw new Error("Invalid Coupon");
-// 	}
-// 	const user = await userModel.findOne({ _id });
-// 	let { cartTotal } = await cartModel
-// 		.findOne({
-// 			orderBy: user._id,
-// 		})
-// 		.populate("products.product");
-// 	let totalAfterDiscount = (
-// 		cartTotal -
-// 		(cartTotal * validCoupon.discount) / 100
-// 	).toFixed(0);
-// 	await cartModel.findOneAndUpdate(
-// 		{ orderBy: user._id },
-// 		{ totalAfterDiscount },
-// 		{ new: true }
-// 	);
-// 	res.json(totalAfterDiscount);
-// });
+	try {
+		const orders = await orderModel
+			.find({ user: _id })
+			.populate("user")
+			.populate("orderItems.product")
+			.populate("orderItems.color");
+		res.json({ orders, success: true });
+	} catch (error) {
+		throw new Error(error);
+	}
+});
 
-// const createOrder = asyncHandler(async (req, res) => {
-// 	const { COD, couponApplied } = req.body;
-// 	const { _id } = req.user;
-// 	validateMongoDbId(_id);
-// 	try {
-// 		if (!COD) throw new Error("Create cash order failed");
-// 		const user = await userModel.findById(_id);
-// 		let userCart = await cartModel.findOne({ orderBy: user._id });
-// 		let finalAmout = 0;
-// 		if (couponApplied && userCart.totalAfterDiscount) {
-// 			finalAmout = userCart.totalAfterDiscount;
-// 		} else {
-// 			finalAmout = userCart.cartTotal;
-// 		}
+const getMonthWiseOrderIncome = asyncHandler(async (req, res) => {
+	let month = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
+	let date = new Date();
+	let endDate = "";
+	date.setDate(1);
+	for (let index = 0; index < 11; index++) {
+		date.setMonth(date.getMonth() - 1);
+		endDate = month[date.getMonth()] + " " + date.getFullYear();
+	}
+	console.log(endDate);
+	const data = await orderModel.aggregate([
+		{
+			$match: {
+				createdAt: {
+					$lte: new Date(),
+					$gte: new Date(endDate),
+				},
+			},
+		},
+		{
+			$group: {
+				_id: {
+					month: "$month",
+				},
+				count: {
+					$sum: 1,
+				},
+				amount: {
+					$sum: "$totalPriceAfterDiscount",
+				},
+			},
+		},
+	]);
+	res.json(data);
+});
 
-// 		let newOrder = await new orderModel({
-// 			products: userCart.products,
-// 			paymentIntent: {
-// 				id: uniqid(),
-// 				method: "COD",
-// 				amount: finalAmout,
-// 				status: "Cash on Delivery",
-// 				created: Date.now(),
-// 				currency: "vnd",
-// 			},
-// 			orderBy: user._id,
-// 			orderStatus: "Cash on Delivery",
-// 		}).save();
-// 		let update = userCart.products.map((item) => {
-// 			return {
-// 				updateOne: {
-// 					filter: { _id: item.product._id },
-// 					update: {
-// 						$inc: { quantity: -item.count, sold: +item.count },
-// 					},
-// 				},
-// 			};
-// 		});
-// 		const updated = await productModel.bulkWrite(update, {});
-// 		res.json({ message: "success" });
-// 	} catch (error) {
-// 		throw new Error(error);
-// 	}
-// });
+const getYearlyTotalOrders = asyncHandler(async (req, res) => {
+	let month = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
+	let date = new Date();
+	let endDate = "";
+	date.setDate(1);
+	for (let index = 0; index < 11; index++) {
+		date.setMonth(date.getMonth() - 1);
+		endDate = month[date.getMonth()] + " " + date.getFullYear();
+	}
+	console.log(endDate);
+	const data = await orderModel.aggregate([
+		{
+			$match: {
+				createdAt: {
+					$lte: new Date(),
+					$gte: new Date(endDate),
+				},
+			},
+		},
+		{
+			$group: {
+				_id: null,
+				count: {
+					$sum: 1,
+				},
+				amount: {
+					$sum: "$totalPriceAfterDiscount",
+				},
+			},
+		},
+	]);
+	res.json(data);
+});
 
-// const getOrders = asyncHandler(async (req, res) => {
-// 	const { _id } = req.user;
-// 	validateMongoDbId(_id);
-// 	try {
-// 		const userorders = await orderModel
-// 			.findOne({ orderBy: _id })
-// 			.populate("products.product")
-// 			.populate("orderBy")
-// 			.exec();
-// 		res.json(userorders);
-// 	} catch (error) {
-// 		throw new Error(error);
-// 	}
-// });
+const getAllOrders = asyncHandler(async (req, res) => {
+	try {
+		const orders = await orderModel.find().populate("user");
+		res.json(orders);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
 
-// const getAllOrders = asyncHandler(async (req, res) => {
-// 	try {
-// 		const alluserorders = await orderModel
-// 			.find()
-// 			.populate("products.product")
-// 			.populate("orderBy")
-// 			.exec();
-// 		res.json(alluserorders);
-// 	} catch (error) {
-// 		throw new Error(error);
-// 	}
-// });
+const getOrderById = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	validateMongoDbId(id);
+	try {
+		const order = await orderModel
+			.findOne({ _id: id })
+			.populate("user")
+			.populate("orderItems.product")
+			.populate("orderItems.color");
+		res.json(order);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
 
-// const getOrderByUserId = asyncHandler(async (req, res) => {
-// 	const { id } = req.params;
-// 	validateMongoDbId(id);
-// 	try {
-// 		const userorders = await orderModel
-// 			.findOne({ orderBy: id })
-// 			.populate("products.product")
-// 			.populate("orderBy")
-// 			.exec();
-// 		res.json(userorders);
-// 	} catch (error) {
-// 		throw new Error(error);
-// 	}
-// });
-
-// const updateOrderStatus = asyncHandler(async (req, res) => {
-// 	const { status } = req.body;
-// 	const { id } = req.params;
-// 	validateMongoDbId(id);
-// 	try {
-// 		const updateOrderStatus = await orderModel.findByIdAndUpdate(
-// 			id,
-// 			{
-// 				orderStatus: status,
-// 				paymentIntent: {
-// 					status: status,
-// 				},
-// 			},
-// 			{ new: true }
-// 		);
-// 		res.json(updateOrderStatus);
-// 	} catch (error) {
-// 		throw new Error(error);
-// 	}
-// });
+const updateOrderStatus = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	validateMongoDbId(id);
+	console.log(req.body.status);
+	try {
+		const order = await orderModel.findByIdAndUpdate(
+			id,
+			{
+				orderStatus: req.body.status,
+			},
+			{
+				new: true,
+			}
+		);
+		res.json(order);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
 
 module.exports = {
 	createUser,
@@ -560,11 +567,10 @@ module.exports = {
 	removeProductFromCart,
 	getUserCart,
 	createOrder,
-	// emptyCart,
-	// applyCoupon,
-	// createOrder,
-	// getOrders,
-	// getAllOrders,
-	// getOrderByUserId,
-	// updateOrderStatus,
+	getMyOrders,
+	getMonthWiseOrderIncome,
+	getYearlyTotalOrders,
+	getAllOrders,
+	getOrderById,
+	updateOrderStatus,
 };

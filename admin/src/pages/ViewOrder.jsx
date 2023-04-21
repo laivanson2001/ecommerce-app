@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom";
-import { getOrderByUser } from "../features/auth/authSlice";
+import { getOrder } from "../features/auth/authSlice";
 const columns = [
 	{
 		title: "STT",
@@ -27,14 +27,9 @@ const columns = [
 		dataIndex: "color",
 	},
 	{
-		title: "Tổng tiền",
+		title: "Giá",
 		dataIndex: "amount",
 	},
-	{
-		title: "Ngày",
-		dataIndex: "date",
-	},
-
 	{
 		title: "Thao tác",
 		dataIndex: "action",
@@ -42,25 +37,21 @@ const columns = [
 ];
 
 const ViewOrder = () => {
+	const dispatch = useDispatch();
+
 	const location = useLocation();
 	const userId = location.pathname.split("/")[3];
-	const dispatch = useDispatch();
-	useEffect(() => {
-		dispatch(getOrderByUser(userId));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	const orderState = useSelector((state) => state.auth.orders[0].products);
-	console.log(orderState);
+
+	const { orderItems } = useSelector((state) => state.auth.order);
 	const data1 = [];
-	for (let i = 0; i < orderState.length; i++) {
+	for (let i = 0; i < orderItems?.length; i++) {
 		data1.push({
 			key: i + 1,
-			name: orderState[i].product.title,
-			brand: orderState[i].product.brand,
-			count: orderState[i].count,
-			amount: orderState[i].product.price,
-			color: orderState[i].product.color,
-			date: new Date(orderState[i].product.createdAt).toLocaleString(),
+			name: orderItems[i].product.title,
+			brand: orderItems[i].product.brand,
+			count: orderItems[i].quantity,
+			amount: orderItems[i].price,
+			color: orderItems[i].color.title,
 			action: (
 				<>
 					<Link to='/' className=' fs-3 text-danger'>
@@ -73,6 +64,12 @@ const ViewOrder = () => {
 			),
 		});
 	}
+
+	useEffect(() => {
+		dispatch(getOrder(userId));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	return (
 		<div>
 			<h3 className='mb-4 title'>Xem đơn hàng</h3>

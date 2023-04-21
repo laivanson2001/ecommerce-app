@@ -30,7 +30,7 @@ const Login = () => {
 				if (authState.isSuccess) {
 					navigate("/");
 				}
-			}, 500);
+			}, 300);
 		},
 	});
 	return (

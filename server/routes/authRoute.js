@@ -19,15 +19,15 @@ const {
 	saveAddress,
 	userCart,
 	getUserCart,
-	// emptyCart,
-	// applyCoupon,
-	// getOrders,
-	// getAllOrders,
-	// getOrderByUserId,
 	createOrder,
-	// updateOrderStatus,
 	removeProductFromCart,
 	updateQuantityProductCart,
+	getMyOrders,
+	getMonthWiseOrderIncome,
+	getYearlyTotalOrders,
+	getAllOrders,
+	getOrderById,
+	updateOrderStatus,
 } = require("../controller/userController");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const {
@@ -41,14 +41,19 @@ authRouter.get("/refresh", handleRefreshToken);
 authRouter.get("/logout", logout);
 authRouter.get("/wishlist", authMiddleware, getWishlist);
 authRouter.get("/cart", authMiddleware, getUserCart);
-// authRouter.get("/get-orders", authMiddleware, getOrders);
-// authRouter.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
-// authRouter.post(
-// 	"/getorderbyuser/:id",
-// 	authMiddleware,
-// 	isAdmin,
-// 	getOrderByUserId
-// );
+authRouter.get("/get-my-orders", authMiddleware, getMyOrders);
+authRouter.get(
+	"/get-month-wise-order-income",
+	authMiddleware,
+	getMonthWiseOrderIncome
+);
+authRouter.get(
+	"/get-yearly-total-orders",
+	authMiddleware,
+	getYearlyTotalOrders
+);
+authRouter.get("/get-all-orders", authMiddleware, isAdmin, getAllOrders);
+authRouter.get("/get-order/:id", authMiddleware, isAdmin, getOrderById);
 authRouter.get("/:id", authMiddleware, isAdmin, getUserById);
 
 authRouter.post("/register", createUser);
@@ -71,12 +76,7 @@ authRouter.put("/save-address", authMiddleware, saveAddress);
 authRouter.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
 authRouter.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
 authRouter.put("/reset-password/:token", resetPassword);
-// authRouter.put(
-// 	"/order/update-order/:id",
-// 	authMiddleware,
-// 	isAdmin,
-// 	updateOrderStatus
-// );
+authRouter.put("/update-order/:id", authMiddleware, isAdmin, updateOrderStatus);
 
 // authRouter.delete("/empty-cart", authMiddleware, emptyCart);
 authRouter.delete(

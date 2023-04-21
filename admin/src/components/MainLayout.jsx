@@ -2,6 +2,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import {
 	AiOutlineBgColors,
 	AiOutlineDashboard,
+	AiOutlineLogout,
 	AiOutlineShoppingCart,
 	AiOutlineUser,
 } from "react-icons/ai";
@@ -39,6 +40,8 @@ const MainLayout = () => {
 					defaultSelectedKeys={[""]}
 					onClick={({ key }) => {
 						if (key === "dang-xuat") {
+							localStorage.clear();
+							window.location.reload();
 						} else {
 							navigate(key);
 						}
@@ -162,6 +165,11 @@ const MainLayout = () => {
 							key: "ho-tro",
 							icon: <FaClipboardList className='fs-4' />,
 							label: "Hỗ trợ",
+						},
+						{
+							key: "dang-xuat",
+							icon: <AiOutlineLogout className='fs-4' />,
+							label: "Đăng xuất",
 						},
 					]}
 				/>

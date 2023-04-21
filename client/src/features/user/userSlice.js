@@ -94,6 +94,50 @@ export const createOrder = createAsyncThunk(
 	}
 );
 
+export const getOrders = createAsyncThunk(
+	"auth/get-orders",
+	async (thunkAPI) => {
+		try {
+			return await authService.getUserOrders();
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
+export const updateUser = createAsyncThunk(
+	"auth/update-user",
+	async (data, thunkAPI) => {
+		try {
+			return await authService.updateUser(data);
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
+export const forgotPassToken = createAsyncThunk(
+	"auth/forgot-password",
+	async (data, thunkAPI) => {
+		try {
+			return await authService.forgotPassToken(data);
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
+export const resetPassword = createAsyncThunk(
+	"auth/reset-password",
+	async (data, thunkAPI) => {
+		try {
+			return await authService.resetPassword(data);
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error);
+		}
+	}
+);
+
 const initialState = {
 	user: getCustomerfromLocalStorage,
 	isError: false,
@@ -252,6 +296,84 @@ export const authSlice = createSlice({
 				state.isError = true;
 				state.isSuccess = false;
 				state.message = action.error;
+			})
+			.addCase(getOrders.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getOrders.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.getOrders = action.payload;
+			})
+			.addCase(getOrders.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+			})
+			.addCase(updateUser.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(updateUser.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.user = { ...action.payload };
+				if (state.isSuccess) {
+					toast.success("Cập nhật tài khoản thành công");
+				}
+			})
+			.addCase(updateUser.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+				if (state.isError) {
+					toast.error("Cập nhật tài khoản thất bại");
+				}
+			})
+			.addCase(forgotPassToken.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(forgotPassToken.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.token = action.payload;
+				if (state.isSuccess) {
+					toast.success("Đã gửi link xác nhận đến địa chỉ email");
+				}
+			})
+			.addCase(forgotPassToken.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+				if (state.isError) {
+					toast.error("Lỗi");
+				}
+			})
+			.addCase(resetPassword.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(resetPassword.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isError = false;
+				state.isSuccess = true;
+				state.password = action.payload;
+				if (state.isSuccess) {
+					toast.success("Đổi mật khẩu thành công");
+				}
+			})
+			.addCase(resetPassword.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.isSuccess = false;
+				state.message = action.error;
+				if (state.isError) {
+					toast.error("Lỗi");
+				}
 			});
 	},
 });

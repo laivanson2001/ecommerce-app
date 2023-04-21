@@ -8,6 +8,7 @@ const CustomInput = ({
 	value,
 	onChange,
 	onBlur,
+	disabled,
 }) => {
 	return (
 		<div>
@@ -19,6 +20,7 @@ const CustomInput = ({
 				value={value}
 				onChange={onChange}
 				onBlur={onBlur}
+				disabled={disabled}
 			/>
 		</div>
 	);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import compare from "../images/compare.svg";
 import wishlist from "../images/wishlist.svg";
@@ -7,11 +7,26 @@ import user from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-bootstrap-typeahead/css/Typeahead.css";
 
 const Header = () => {
-	const [totalAmount, setTotalAmount] = useState(null);
+	const navigate = useNavigate();
+
 	const cartItems = useSelector((state) => state.auth.cartProducts);
 	const authState = useSelector((state) => state.auth);
+	const productState = useSelector((state) => state.product.product);
+
+	const [totalAmount, setTotalAmount] = useState(null);
+	const [options, setOptions] = useState([]);
+
+	const handleLogout = () => {
+		localStorage.clear();
+		toast.success("Đăng xuất thành công");
+		window.location.reload();
+	};
+
 	useEffect(() => {
 		setTotalAmount(
 			cartItems?.reduce(
@@ -22,6 +37,21 @@ const Header = () => {
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cartItems]);
+
+	useEffect(() => {
+		let data = [];
+		for (let i = 0; i < productState.length; i++) {
+			const item = productState[i];
+			data.push({
+				id: i,
+				productId: item._id,
+				name: item.title,
+			});
+		}
+		setOptions(data);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [productState]);
+
 	return (
 		<>
 			<header className='header-top-strip py-3'>
@@ -58,12 +88,20 @@ const Header = () => {
 						</div>
 						<div className='col-5'>
 							<div className='input-group'>
-								<input
-									type='text'
-									className='form-control py-2'
+								<Typeahead
+									id='pagination-example'
+									onPaginate={() =>
+										console.log("Results paginated")
+									}
+									onChange={(selected) =>
+										navigate(
+											`/product/${selected[0]?.productId}`
+										)
+									}
+									options={options}
 									placeholder='Tìm kiếm sản phẩm...'
-									aria-label="Recipient's username"
-									aria-describedby='basic-addon2'
+									labelKey='name'
+									minLength={2}
 								/>
 								<span
 									className='input-group-text p-3'
@@ -98,7 +136,7 @@ const Header = () => {
 										to={
 											authState.user === null
 												? "/login"
-												: ""
+												: "/my-profile"
 										}
 										className='d-flex align-items-center gap-10 text-white'
 									>
@@ -191,8 +229,20 @@ const Header = () => {
 										<NavLink to='/product'>
 											Cửa hàng
 										</NavLink>
+										<NavLink to='/my-orders'>
+											Đơn hàng
+										</NavLink>
 										<NavLink to='/blogs'>Tin tức</NavLink>
 										<NavLink to='/contact'>Liên hệ</NavLink>
+										{authState.user && (
+											<button
+												onClick={handleLogout}
+												className='border border-0 bg-transparent text-white text-uppercase'
+												style={{ fontSize: "14px" }}
+											>
+												Đăng xuất
+											</button>
+										)}
 									</div>
 								</div>
 							</div>

@@ -22,6 +22,8 @@ import SingleProduct from "./pages/SingleProduct";
 import TermAndContions from "./pages/TermAndContions";
 import Wishlist from "./pages/Wishlist";
 import PrivateRoutes from "./routing/PrivateRoutes";
+import Order from "./pages/Order";
+import Profile from "./pages/Profile";
 
 function App() {
 	return (
@@ -37,6 +39,8 @@ function App() {
 								element={<CompareProduct />}
 							/>
 							<Route path='wishlist' element={<Wishlist />} />
+							<Route path='my-orders' element={<Order />} />
+							<Route path='my-profile' element={<Profile />} />
 						</Route>
 						<Route index element={<Home />} />
 						<Route path='about' element={<About />} />
@@ -53,7 +57,7 @@ function App() {
 						/>
 						<Route path='signup' element={<Signup />} />
 						<Route
-							path='reset-password'
+							path='reset-password/:token'
 							element={<ResetPassword />}
 						/>
 						<Route

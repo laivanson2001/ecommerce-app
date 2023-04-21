@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import ProductCard from "../components/ProductCard";
 import Color from "../components/Color";
 import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart, AiOutlineLink } from "react-icons/ai";
@@ -10,22 +9,32 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "../components/Container";
 import watch from "../images/watch.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { getAProduct } from "../features/products/productSlice";
+import {
+	getAProduct,
+	getAllProducts,
+	rateProduct,
+} from "../features/products/productSlice";
 import { toast } from "react-toastify";
 import { addCart, getUserCart } from "../features/user/userSlice";
+import ProductCart from "../components/ProductCard";
 
 const SingleProduct = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const location = useLocation();
+	const getProductId = location.pathname.split("/")[2];
+
+	const productState = useSelector((state) => state.product.singleProduct);
+	const productsState = useSelector((state) => state.product.product);
+	const cartState = useSelector((state) => state.auth.cartProducts);
+
 	const [color, setColor] = useState(null);
 	const [quantity, setQuantity] = useState(1);
 	const [alreadyAdded, setAlreadyAdded] = useState(false);
-
-	const location = useLocation();
-	const getProductId = location.pathname.split("/")[2];
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
-
-	const productState = useSelector((state) => state.product.singleProduct);
-	const cartState = useSelector((state) => state.auth.cartProducts);
+	const [orderedProduct, setorderedProduct] = useState(true);
+	const [popularProduct, setPopularProduct] = useState([]);
+	const [star, setStar] = useState(null);
+	const [comment, setComment] = useState("");
 
 	const props = {
 		width: 594,
@@ -34,7 +43,6 @@ const SingleProduct = () => {
 		img: productState?.images[0]?.url ? productState?.images[0]?.url : "",
 	};
 
-	const [orderedProduct, setorderedProduct] = useState(true);
 	const copyToClipboard = (text) => {
 		console.log("text", text);
 		var textField = document.createElement("textarea");
@@ -62,6 +70,24 @@ const SingleProduct = () => {
 			navigate("/cart");
 		}
 	};
+
+	const addRatingToProduct = () => {
+		if (star === null) {
+			toast.error("Chọn sao đánh giá");
+			return false;
+		}
+		if (comment === "") {
+			toast.error("Vui lòng nhập đánh giá");
+			return false;
+		}
+		dispatch(rateProduct({ star, comment, prodId: getProductId }));
+		setTimeout(() => {
+			dispatch(getAProduct(getProductId));
+		}, 300);
+		setStar(0);
+		setComment("");
+	};
+
 	useEffect(() => {
 		setorderedProduct([]);
 		dispatch(getAProduct(getProductId));
@@ -73,6 +99,20 @@ const SingleProduct = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		dispatch(getAllProducts());
+		let data = [];
+		for (let i = 0; i < productsState.length; i++) {
+			const item = productsState[i];
+			if (item.tags === "popular") {
+				data.push(item);
+			}
+		}
+		setPopularProduct(data);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [productState]);
+
 	return (
 		<>
 			<Meta title={"Smart Watch Pro"} />
@@ -149,9 +189,11 @@ const SingleProduct = () => {
 								<div className='d-flex gap-10 align-items-center my-2'>
 									<h3 className='product-heading'>Tags :</h3>
 									<p className='product-data'>
-										{productState?.tags[0] === "featured"
+										{productState?.tags === "featured"
 											? "Phổ biến"
-											: ""}
+											: productState?.tags === "special"
+											? "Đặc biệt"
+											: "Nổi bật"}
 									</p>
 								</div>
 								<div className='d-flex gap-10 align-items-center my-2'>
@@ -324,12 +366,14 @@ const SingleProduct = () => {
 								<form
 									action=''
 									className='d-flex flex-column gap-15'
+									onSubmit={addRatingToProduct}
 								>
 									<div>
 										<ReactStars
 											count={5}
 											size={24}
-											value={4}
+											value={0}
+											onChange={(e) => setStar(e)}
 											edit={true}
 											activeColor='#ffd700'
 										/>
@@ -342,37 +386,44 @@ const SingleProduct = () => {
 											cols='30'
 											rows='4'
 											placeholder='Bình luận'
+											value={comment}
+											onChange={(e) =>
+												setComment(e.target.value)
+											}
 										></textarea>
 									</div>
 									<div className='d-flex justify-content-end'>
-										<button className='button border-0'>
+										<button
+											className='button border-0 mt-3'
+											type='button'
+											onClick={addRatingToProduct}
+										>
 											Gửi
 										</button>
 									</div>
 								</form>
 							</div>
 							<div className='reviews mt-4'>
-								<div className='review'>
-									<div className='d-flex gap-10 align-items-center'>
-										<h6 className='mb-0'>laivaison</h6>
-										<ReactStars
-											count={5}
-											size={24}
-											value={4}
-											edit={false}
-											activeColor='#ffd700'
-										/>
-									</div>
-									<p className='mt-3'>
-										Lorem ipsum dolor sit amet consectetur,
-										adipisicing elit. Consectetur fugit ut
-										excepturi quos. Id reprehenderit
-										voluptatem placeat consequatur suscipit
-										ex. Accusamus dolore quisquam deserunt
-										voluptate, sit magni perspiciatis quas
-										iste?
-									</p>
-								</div>
+								{productState &&
+									productState.ratings.map((item, index) => (
+										<div key={index} className='review'>
+											<div className='d-flex gap-10 align-items-center'>
+												<h6 className='mb-0'>
+													laivaison
+												</h6>
+												<ReactStars
+													count={5}
+													size={24}
+													value={item.star}
+													edit={false}
+													activeColor='#ffd700'
+												/>
+											</div>
+											<p className='mt-3'>
+												{item.comment}
+											</p>
+										</div>
+									))}
 							</div>
 						</div>
 					</div>
@@ -385,7 +436,7 @@ const SingleProduct = () => {
 					</div>
 				</div>
 				<div className='row'>
-					<ProductCard />
+					<ProductCart data={popularProduct} />
 				</div>
 			</Container>
 			<div

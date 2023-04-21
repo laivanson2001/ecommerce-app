@@ -1,26 +1,57 @@
 import React, { useEffect, useState } from "react";
-import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
-import Color from "../components/Color";
 import Container from "../components/Container";
 import Meta from "../components/Meta";
 import ProductCard from "../components/ProductCard";
-import watch from "../images/watch.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../features/products/productSlice";
 
 const OurStore = () => {
-	const [grid, setGrid] = useState(4);
 	const dispatch = useDispatch();
+
 	const productState = useSelector((state) => state.product);
 	const { product } = productState;
+
+	const [grid, setGrid] = useState(4);
+	const [brands, setBrands] = useState([]);
+	const [brand, setBrand] = useState(null);
+	const [categories, setCategories] = useState([]);
+	const [category, setCategory] = useState(null);
+	const [tags, setTags] = useState([]);
+	const [tag, setTag] = useState(null);
+	const [minPrice, setMinPrice] = useState(0);
+	const [maxPrice, setMaxPrice] = useState(0);
+	const [sort, setSort] = useState(null);
+
 	const getProducts = () => {
-		dispatch(getAllProducts());
+		dispatch(
+			getAllProducts({ brand, category, tag, minPrice, maxPrice, sort })
+		);
 	};
+
 	useEffect(() => {
 		getProducts();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [brand, category, tag, minPrice, maxPrice, sort]);
+
+	useEffect(() => {
+		let brands = [];
+		let categories = [];
+		let tags = [];
+		for (let i = 0; i < product.length; i++) {
+			const item = product[i];
+			brands.push(item.brand);
+			categories.push(item.category);
+			tags.push(item.tags);
+		}
+		setBrands(brands);
+		setCategories(categories);
+		setTags(tags);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [product]);
+
+	console.log(tag);
+
 	return (
 		<>
 			<Meta title='Cửa hàng' />
@@ -32,55 +63,35 @@ const OurStore = () => {
 							<h3 className='filter-title'>Danh mục</h3>
 							<div>
 								<ul className='ps-0'>
-									<li>Đồng hồ</li>
-									<li>TV</li>
-									<li>Máy ảnh</li>
-									<li>Laptop</li>
+									{categories.length > 0 &&
+										categories.map((item, i) => (
+											<li
+												key={i}
+												onClick={() =>
+													setCategory(item)
+												}
+											>
+												{item}
+											</li>
+										))}
 								</ul>
 							</div>
 						</div>
 						<div className='filter-card mb-3'>
 							<h3 className='filter-title'>Bộ lọc:</h3>
 							<div>
-								<h5 className='sub-title'>Khả dụng</h5>
-								<div>
-									<div className='form-check'>
-										<input
-											className='form-check-input'
-											type='checkbox'
-											value=''
-											id=''
-										/>
-										<label
-											className='form-check-label'
-											htmlFor=''
-										>
-											Còn hàng (1)
-										</label>
-									</div>
-									<div className='form-check'>
-										<input
-											className='form-check-input'
-											type='checkbox'
-											value=''
-											id=''
-										/>
-										<label
-											className='form-check-label'
-											htmlFor=''
-										>
-											Hết hàng (0)
-										</label>
-									</div>
-								</div>
 								<h5 className='sub-title'>Giá tiền</h5>
 								<div className='d-flex align-items-center gap-10'>
 									<div className='form-floating'>
 										<input
-											type='email'
+											type='number'
 											className='form-control'
 											id='floatingInput'
 											placeholder='Từ'
+											value={minPrice}
+											onChange={(e) =>
+												setMinPrice(e.target.value)
+											}
 										/>
 										<label htmlFor='floatingInput'>
 											Từ
@@ -88,48 +99,17 @@ const OurStore = () => {
 									</div>
 									<div className='form-floating'>
 										<input
-											type='email'
+											type='number'
 											className='form-control'
 											id='floatingInput1'
 											placeholder='Đến'
+											value={maxPrice}
+											onChange={(e) =>
+												setMaxPrice(e.target.value)
+											}
 										/>
 										<label htmlFor='floatingInput1'>
 											Đến
-										</label>
-									</div>
-								</div>
-								<h5 className='sub-title'>Màu sắc</h5>
-								<div>
-									<Color />
-								</div>
-								<h5 className='sub-title'>Kích cỡ</h5>
-								<div>
-									<div className='form-check'>
-										<input
-											className='form-check-input'
-											type='checkbox'
-											value=''
-											id='color-1'
-										/>
-										<label
-											className='form-check-label'
-											htmlFor='color-1'
-										>
-											S (2)
-										</label>
-									</div>
-									<div className='form-check'>
-										<input
-											className='form-check-input'
-											type='checkbox'
-											value=''
-											id='color-2'
-										/>
-										<label
-											className='form-check-label'
-											htmlFor='color-2'
-										>
-											M (2)
 										</label>
 									</div>
 								</div>
@@ -139,63 +119,39 @@ const OurStore = () => {
 							<h3 className='filter-title'>Tags</h3>
 							<div>
 								<div className='product-tags d-flex flex-wrap align-items-center gap-10'>
-									<span className='badge bg-light text-secondary rounded-3 py-2 px-3'>
-										Tai nghe
-									</span>
-									<span className='badge bg-light text-secondary rounded-3 py-2 px-3'>
-										Laptop
-									</span>
-									<span className='badge bg-light text-secondary rounded-3 py-2 px-3'>
-										Điện thoại
-									</span>
-									<span className='badge bg-light text-secondary rounded-3 py-2 px-3'>
-										Loa
-									</span>
+									{tags.length > 0 &&
+										tags.map((item, i) => (
+											<span
+												key={i}
+												role='button'
+												onClick={() => setTag(item)}
+												className='badge bg-light text-secondary rounded-3 py-2 px-3'
+											>
+												{item === "featured"
+													? "Phổ biến"
+													: item === "special"
+													? "Đặc biệt"
+													: "Nổi bật"}
+											</span>
+										))}
 								</div>
 							</div>
 						</div>
 						<div className='filter-card mb-3'>
-							<h3 className='filter-title'>Gợi ý</h3>
+							<h3 className='filter-title'>Thương hiệu</h3>
 							<div>
-								<div className='random-products mb-3 d-flex'>
-									<div className='w-50'>
-										<img
-											src={watch}
-											className='img-fluid'
-											alt='watch'
-										/>
-									</div>
-									<div className='w-50'>
-										<h5>Smart Watch</h5>
-										<ReactStars
-											count={5}
-											size={24}
-											value={4}
-											edit={false}
-											activeColor='#ffd700'
-										/>
-										<b>2.000.000đ</b>
-									</div>
-								</div>
-								<div className='random-products d-flex'>
-									<div className='w-50'>
-										<img
-											src={watch}
-											className='img-fluid'
-											alt='watch'
-										/>
-									</div>
-									<div className='w-50'>
-										<h5>Smart Watch</h5>
-										<ReactStars
-											count={5}
-											size={24}
-											value={4}
-											edit={false}
-											activeColor='#ffd700'
-										/>
-										<b>2.000.000đ</b>
-									</div>
+								<div className='product-tags d-flex flex-wrap align-items-center gap-10'>
+									{brands.length > 0 &&
+										brands.map((item, i) => (
+											<span
+												key={i}
+												role='button'
+												onClick={() => setBrand(item)}
+												className='badge bg-light text-secondary rounded-3 py-2 px-3'
+											>
+												{item}
+											</span>
+										))}
 								</div>
 							</div>
 						</div>
@@ -212,30 +168,25 @@ const OurStore = () => {
 									</p>
 									<select
 										name=''
-										defaultValue={"manula"}
+										defaultValue={"title-ascending"}
 										className='form-control form-select'
 										id=''
+										onChange={(e) =>
+											setSort(e.target.value)
+										}
 									>
-										<option value='manual'>Phổ biến</option>
-										<option value='best-selling'>
-											Bán chạy nhất
-										</option>
-										<option value='title-ascending'>
-											A-Z
-										</option>
-										<option value='title-descending'>
-											Z-A
-										</option>
-										<option value='price-ascending'>
+										<option value='title'>A-Z</option>
+										<option value='-title'>Z-A</option>
+										<option value='price'>
 											Giá thấp đến cao
 										</option>
-										<option value='price-descending'>
+										<option value='-price'>
 											Giá cao đến thấp
 										</option>
-										<option value='created-ascending'>
+										<option value='created'>
 											Mới nhất
 										</option>
-										<option value='created-descending'>
+										<option value='-created'>
 											Cũ nhất
 										</option>
 									</select>
