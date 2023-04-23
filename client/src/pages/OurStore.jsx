@@ -50,8 +50,6 @@ const OurStore = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [product]);
 
-	console.log(tag);
-
 	return (
 		<>
 			<Meta title='Cửa hàng' />

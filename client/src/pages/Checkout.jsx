@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import Container from "../components/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { createOrder, getUserCart } from "../features/user/userSlice";
+import {
+	createOrder,
+	emptyCart,
+	getUserCart,
+} from "../features/user/userSlice";
 import { object, string } from "yup";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -17,15 +21,13 @@ const shippingSchema = object({
 });
 
 const Checkout = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const cartState = useSelector((state) => state.auth.cartProducts);
+
 	const [cartProductItems, setCartProductItems] = useState([]);
 	const [totalAmount, setTotalAmount] = useState(null);
-	const [shippingInfo, setShippingInfo] = useState(null);
-	const [paymentInfo, setPaymentInfo] = useState({
-		razorpayOrderId: "",
-		razorpayPaymentId: "",
-	});
-	const dispatch = useDispatch();
-	const cartState = useSelector((state) => state.auth.cartProducts);
 
 	const formik = useFormik({
 		initialValues: {
@@ -36,10 +38,10 @@ const Checkout = () => {
 		},
 		validationSchema: shippingSchema,
 		onSubmit: (values) => {
-			setShippingInfo(values);
+			localStorage.setItem("shipping", JSON.stringify(values));
 			setTimeout(() => {
 				checkoutHandler();
-			}, 300);
+			}, 500);
 		},
 	});
 	const loadScript = (src) => {
@@ -89,25 +91,24 @@ const Checkout = () => {
 					razorpayOrderId: response.razorpay_order_id,
 				};
 
-				await axios.post(
+				const result = await axios.post(
 					`${base_url}user/order/payment-verification`,
 					data,
 					config
 				);
-
-				setPaymentInfo({
-					razorpayPaymentId: response.razorpay_payment_id,
-					razorpayOrderId: response.razorpay_order_id,
-				});
 				dispatch(
 					createOrder({
 						totalPrice: totalAmount,
 						totalPriceAfterDiscount: totalAmount,
 						orderItems: cartProductItems,
-						paymentInfo,
-						shippingInfo,
+						paymentInfo: result.data,
+						shippingInfo: JSON.parse(
+							localStorage.getItem("shipping")
+						),
 					})
 				);
+				dispatch(emptyCart());
+				navigate("/my-orders");
 			},
 			prefill: {
 				name: "Atomic",
@@ -349,7 +350,7 @@ const Checkout = () => {
 							<h4 className='total'>Tổng cộng</h4>
 							<h5 className='total-price'>
 								{new Intl.NumberFormat().format(
-									totalAmount + 100000
+									totalAmount + 30000
 								)}
 								đ
 							</h5>

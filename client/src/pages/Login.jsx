@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -33,6 +33,15 @@ const Login = () => {
 			}, 300);
 		},
 	});
+
+	useEffect(() => {
+		if (authState.user !== null) {
+			navigate("/");
+			window.location.reload();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [authState]);
+
 	return (
 		<>
 			<Meta title={"Đăng nhập"} />

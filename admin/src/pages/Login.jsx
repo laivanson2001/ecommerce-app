@@ -31,6 +31,7 @@ const Login = () => {
 	useEffect(() => {
 		if (user !== null || isSuccess) {
 			navigate("/admin");
+			window.location.reload();
 		} else {
 			navigate("/");
 		}

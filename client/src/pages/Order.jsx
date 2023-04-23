@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Container from "../components/Container";
 import BreadCrumb from "../components/BreadCrumb";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrders } from "../features/user/userSlice";
+import { getOrders, getUserCart } from "../features/user/userSlice";
 
 const Order = () => {
 	const dispatch = useDispatch();
@@ -11,6 +11,7 @@ const Order = () => {
 
 	useEffect(() => {
 		dispatch(getOrders());
+		dispatch(getUserCart());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

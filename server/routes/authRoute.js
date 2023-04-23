@@ -28,6 +28,7 @@ const {
 	getAllOrders,
 	getOrderById,
 	updateOrderStatus,
+	emptyCart,
 } = require("../controller/userController");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const {
@@ -78,7 +79,7 @@ authRouter.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
 authRouter.put("/reset-password/:token", resetPassword);
 authRouter.put("/update-order/:id", authMiddleware, isAdmin, updateOrderStatus);
 
-// authRouter.delete("/empty-cart", authMiddleware, emptyCart);
+authRouter.delete("/empty-cart", authMiddleware, emptyCart);
 authRouter.delete(
 	"/delete-product-cart/:cartItemId",
 	authMiddleware,

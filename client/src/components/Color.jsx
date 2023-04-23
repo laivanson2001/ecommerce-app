@@ -11,6 +11,7 @@ const Color = ({ colorData, setColor }) => {
 							style={{ backgroundColor: item?.title }}
 							value={item?._id}
 							onClick={() => setColor(item?._id)}
+							role='button'
 						></li>
 					))}
 			</ul>

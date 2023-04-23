@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { object, string } from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/user/userSlice";
 
 const signUpSchema = object({
@@ -18,6 +18,9 @@ const signUpSchema = object({
 
 const Signup = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const authState = useSelector((state) => state.auth);
 
 	const formik = useFormik({
 		initialValues: {
@@ -31,6 +34,14 @@ const Signup = () => {
 			dispatch(registerUser(values));
 		},
 	});
+
+	useEffect(() => {
+		if (authState.user !== null) {
+			navigate("/");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [authState]);
+
 	return (
 		<>
 			<Meta title={"Đăng ký"} />

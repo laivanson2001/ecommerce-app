@@ -528,7 +528,6 @@ const getOrderById = asyncHandler(async (req, res) => {
 const updateOrderStatus = asyncHandler(async (req, res) => {
 	const { id } = req.params;
 	validateMongoDbId(id);
-	console.log(req.body.status);
 	try {
 		const order = await orderModel.findByIdAndUpdate(
 			id,
@@ -540,6 +539,17 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 			}
 		);
 		res.json(order);
+	} catch (error) {
+		throw new Error(error);
+	}
+});
+
+const emptyCart = asyncHandler(async (req, res) => {
+	const { _id } = req.user;
+	validateMongoDbId(_id);
+	try {
+		const carts = await cartModel.deleteMany({ userId: _id });
+		res.json(carts);
 	} catch (error) {
 		throw new Error(error);
 	}
@@ -573,4 +583,5 @@ module.exports = {
 	getAllOrders,
 	getOrderById,
 	updateOrderStatus,
+	emptyCart,
 };

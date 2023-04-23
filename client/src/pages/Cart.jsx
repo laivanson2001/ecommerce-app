@@ -15,7 +15,7 @@ const Cart = () => {
 	const [productDetail, setproductDetail] = useState(null);
 	const [totalAmount, setTotalAmount] = useState(null);
 	const dispatch = useDispatch();
-	const cartUserState = useSelector((state) => state.auth.cartProducts);
+	const authState = useSelector((state) => state.auth);
 
 	const updateCart = (id, quantity) => {
 		dispatch(updateQuantity({ cartItemId: id, quantity }));
@@ -34,14 +34,15 @@ const Cart = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [productDetail]);
 	useEffect(() => {
-		setTotalAmount(
-			cartUserState?.reduce(
-				(totalAmount, state) =>
-					totalAmount + state.quantity * state.price,
-				0
-			)
-		);
-	}, [cartUserState]);
+		authState.cartProducts?.length > 0 &&
+			setTotalAmount(
+				authState.cartProducts?.reduce(
+					(totalAmount, state) =>
+						totalAmount + state.quantity * state.price,
+					0
+				)
+			);
+	}, [authState.cartProducts]);
 	return (
 		<>
 			<Meta title={"Giỏ hàng"} />
@@ -55,8 +56,8 @@ const Cart = () => {
 							<h4 className='cart-col-3'>Số lượng</h4>
 							<h4 className='cart-col-4'>Tổng</h4>
 						</div>
-						{cartUserState &&
-							cartUserState.map((item, index) => (
+						{authState.cartProducts?.length > 0 &&
+							authState.cartProducts.map((item, index) => (
 								<div
 									key={index}
 									className='cart-data py-3 mb-2 d-flex justify-content-between align-items-center'
@@ -130,6 +131,7 @@ const Cart = () => {
 													}, 300);
 												}}
 												className='text-danger '
+												role='button'
 											/>
 										</div>
 									</div>

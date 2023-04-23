@@ -14,7 +14,6 @@ import "react-bootstrap-typeahead/css/Typeahead.css";
 const Header = () => {
 	const navigate = useNavigate();
 
-	const cartItems = useSelector((state) => state.auth.cartProducts);
 	const authState = useSelector((state) => state.auth);
 	const productState = useSelector((state) => state.product.product);
 
@@ -29,14 +28,14 @@ const Header = () => {
 
 	useEffect(() => {
 		setTotalAmount(
-			cartItems?.reduce(
+			authState.cartProducts.reduce(
 				(totalAmount, state) =>
 					totalAmount + state.quantity * state.price,
 				0
 			)
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cartItems]);
+	}, [authState.cartProducts]);
 
 	useEffect(() => {
 		let data = [];
@@ -154,13 +153,16 @@ const Header = () => {
 										className='d-flex align-items-center gap-10 text-white'
 									>
 										<img src={cart} alt='' />
-										{cartItems?.length > 0 && (
+										{authState.cartProducts?.length > 0 && (
 											<div className='d-flex flex-column gap-10'>
 												<span
 													className='badge bg-white text-dark'
 													style={{ width: "30px" }}
 												>
-													{cartItems?.length}
+													{
+														authState.cartProducts
+															?.length
+													}
 												</span>
 												<p className='mb-0'>
 													{new Intl.NumberFormat().format(

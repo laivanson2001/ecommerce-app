@@ -13,9 +13,7 @@ const login = async (userData) => {
 	if (response.data) {
 		localStorage.setItem("customer", JSON.stringify(response.data));
 	}
-	if (response.data) {
-		return response.data;
-	}
+	return response.data;
 };
 
 const getUserWishList = async () => {
@@ -106,6 +104,14 @@ const resetPassword = async (data) => {
 	}
 };
 
+const emptyCart = async () => {
+	console.log(config);
+	const response = await axios.delete(`${base_url}user/empty-cart`, config);
+	if (response.data) {
+		return response.data;
+	}
+};
+
 export const authService = {
 	register,
 	login,
@@ -119,4 +125,5 @@ export const authService = {
 	updateUser,
 	forgotPassToken,
 	resetPassword,
+	emptyCart,
 };
